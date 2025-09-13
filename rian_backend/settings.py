@@ -131,20 +131,25 @@ USE_TZ = True
 # ------------------------------
 # Static & Media
 # ------------------------------
-
+# ------------------------------
+# Static & Media
+# ------------------------------
 
 INSTALLED_APPS += [
     "cloudinary",
     "cloudinary_storage",
 ]
 
-# Media files (images, uploads)
+# Cloudinary Storage for media files
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-# Static files (already handled by collectstatic → keep as is)
+# Static files (CSS, JS, images served by WhiteNoise)
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-MEDIA_URL = "/media/"
+
+# ❌ Remove MEDIA_ROOT since Cloudinary handles uploads
+# MEDIA_URL = "/media/"
+# MEDIA_ROOT = BASE_DIR / "media"
 
 
 # ✅ WhiteNoise for production
