@@ -84,7 +84,7 @@ TEMPLATES = [
                 # custom processors
                 "shop.context_processors.categories_processor",
                 "shop.context_processors.site_config",
-                "shop.context_processors.cart_context", 
+                "shop.context_processors.cart_context",
             ],
         },
     },
@@ -105,7 +105,7 @@ if DATABASE_URL:
     DATABASES["default"] = dj_database_url.config(
         default=DATABASE_URL,
         conn_max_age=600,
-        ssl_require=not DEBUG,  # require SSL only in production
+        ssl_require=not DEBUG,  # require SSL in production
     )
 
 # ------------------------------
@@ -127,18 +127,13 @@ USE_TZ = True
 # ------------------------------
 # Static & Media
 # ------------------------------
-
-# ------------------------------
-# Static & Media
-# ------------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Always use Cloudinary for uploads (even in DEBUG)
+# Media uploads
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-
-
+MEDIA_URL = "/media/"  # Required even when using Cloudinary
 
 # ------------------------------
 # CORS
