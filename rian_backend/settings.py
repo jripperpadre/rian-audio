@@ -93,6 +93,9 @@ TEMPLATES = [
 # ------------------------------
 # Database (SQLite fallback, Postgres for prod)
 # ------------------------------
+# ------------------------------
+# Database (SQLite for dev, Postgres for production)
+# ------------------------------
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -101,11 +104,12 @@ DATABASES = {
 }
 
 DATABASE_URL = os.getenv("DATABASE_URL")
+
 if DATABASE_URL:
-    DATABASES["default"] = dj_database_url.parse(
-        DATABASE_URL,
+    DATABASES["default"] = dj_database_url.config(
+        default=DATABASE_URL,
         conn_max_age=600,
-        ssl_require=not DEBUG,
+        ssl_require=not DEBUG,  # force SSL only in production
     )
 
 # ------------------------------
@@ -127,9 +131,21 @@ USE_TZ = True
 # ------------------------------
 # Static & Media
 # ------------------------------
+
+
+INSTALLED_APPS += [
+    "cloudinary",
+    "cloudinary_storage",
+]
+
+# Media files (images, uploads)
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+# Static files (already handled by collectstatic → keep as is)
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "shop" / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+MEDIA_URL = "/media/"
+
 
 # ✅ WhiteNoise for production
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
