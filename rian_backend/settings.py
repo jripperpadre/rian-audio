@@ -126,6 +126,7 @@ USE_TZ = True
 # ------------------------------
 # Static & Media
 # ------------------------------
+
 # ------------------------------
 # Static & Media
 # ------------------------------
@@ -136,11 +137,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # Always use Cloudinary for uploads (even in DEBUG)
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
-CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": os.getenv("CLOUDINARY_CLOUD_NAME"),
-    "API_KEY": os.getenv("CLOUDINARY_API_KEY"),
-    "API_SECRET": os.getenv("CLOUDINARY_API_SECRET"),
-}
 
 
 # ------------------------------
