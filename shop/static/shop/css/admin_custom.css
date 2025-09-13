@@ -1,0 +1,74 @@
+/* ============================
+   🎵 Rian Audio Sounds Admin
+   Custom Jazzmin Styling
+   ============================ */
+
+/* Sidebar background */
+.sidebar-dark-primary {
+    background-color: #4c1d95 !important; /* Deep purple */
+}
+
+/* Sidebar brand/logo */
+.brand-link {
+    background-color: #3b0a69 !important; /* Darker purple */
+    color: #fbbf24 !important; /* Gold text */
+    font-weight: 600;
+}
+.brand-link .brand-image {
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(0,0,0,0.3);
+}
+
+/* Active/selected menu link */
+.nav-sidebar .nav-item > .nav-link.active {
+    background-color: #f59e0b !important; /* Gold */
+    color: #fff !important;
+    font-weight: 600;
+    border-radius: 6px;
+}
+
+/* Hover menu link */
+.nav-sidebar .nav-item > .nav-link:hover {
+    background-color: #f59e0b33 !important; /* Light gold */
+    color: #fff !important;
+    border-radius: 6px;
+}
+
+/* Page background */
+.content-wrapper {
+    background-color: #f3f4f6 !important; /* Light gray */
+}
+
+/* Navbar */
+.navbar {
+    background-color: #4c1d95 !important; /* Purple navbar */
+}
+.navbar .nav-link {
+    color: #fbbf24 !important; /* Gold links */
+}
+.navbar .nav-link:hover {
+    color: #fff !important;
+}
+
+/* Cards */
+.card {
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* Table headers */
+.table th {
+    background-color: #4c1d95 !important;
+    color: #fff !important;
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #4c1d95 !important;
+    border-color: #4c1d95 !important;
+}
+.btn-primary:hover {
+    background-color: #6d28d9 !important;
+    border-color: #6d28d9 !important;
+}

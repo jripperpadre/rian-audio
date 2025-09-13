@@ -1,0 +1,133 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Cart - Rian Audio Sounds{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="h4 fw-bold mb-4 text-purple">Your Cart</h2>
+
+  <div class="table-responsive bg-white shadow-sm rounded">
+    <table class="table align-middle mb-0">
+      <thead class="bg-purple text-white">
+        <tr>
+          <th scope="col">Product</th>
+          <th scope="col" class="text-center">Quantity</th>
+          <th scope="col">Price</th>
+          <th scope="col">Total</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart %}
+        <tr>
+          <!-- Product -->
+          <td class="d-flex align-items-center">
+            {% if item.product.image %}
+              <img src="{{ item.product.image.url }}"
+                   class="rounded me-3 shadow-sm"
+                   style="width: 60px; height: 60px; object-fit: cover;"
+                   alt="{{ item.product.name }}">
+            {% endif %}
+            <div>
+              <div class="fw-semibold text-purple">{{ item.product.name }}</div>
+              {% if item.product.badge_type %}
+                <span class="badge 
+                  {% if item.product.badge_type == 'sale' %} bg-danger
+                  {% elif item.product.badge_type == 'new' %} bg-purple
+                  {% elif item.product.badge_type == 'best' %} bg-success
+                  {% else %} bg-secondary {% endif %}">
+                  {{ item.product.get_badge_type_display }}
+                </span>
+              {% endif %}
+            </div>
+          </td>
+
+          <!-- Quantity (update form) -->
+          <td class="text-center">
+            <form method="post" action="{% url 'add_to_cart' item.product.id %}" class="d-inline">
+              {% csrf_token %}
+              <input type="number"
+                     name="quantity"
+                     class="form-control text-center d-inline-block"
+                     style="width: 70px;"
+                     min="1"
+                     value="{{ item.quantity }}"
+                     aria-label="Update {{ item.product.name }} quantity">
+              <input type="hidden" name="override" value="True">
+              <button type="submit" class="btn btn-sm btn-shop mt-2">Update</button>
+            </form>
+          </td>
+
+          <!-- Price -->
+          <td class="text-muted">KES {{ item.price }}</td>
+
+          <!-- Line Total -->
+          <td class="fw-semibold text-gold">
+            KES {{ item.total_price }}
+          </td>
+
+          <!-- Remove -->
+          <td class="text-end">
+            <form method="post" action="{% url 'remove_from_cart' item.product.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger"
+                      aria-label="Remove {{ item.product.name }}">
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">
+            <div class="fallback-box text-center">
+              <div class="mb-3">
+                <i class="bi bi-cart-x display-4 text-purple"></i>
+              </div>
+              <h5 class="fw-bold text-purple mb-2">Your cart is empty</h5>
+              <p class="text-muted mb-4">
+                Looks like you haven’t added anything yet. 
+                Browse our products and find your perfect sound 🎵
+              </p>
+              <a href="{% url 'products' %}" class="btn btn-shop">
+                Continue Shopping
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ✅ Cart summary with savings -->
+  {% if cart %}
+  <div class="mt-4 p-3 bg-light rounded shadow-sm">
+    <div class="d-flex justify-content-between mb-2">
+      <span class="fw-semibold">Subtotal:</span>
+      <span>KES {{ cart.get_total_price }}</span>
+    </div>
+    <div class="d-flex justify-content-between mb-2 text-success">
+      <span class="fw-semibold">You Save:</span>
+      <span>KES {{ total_savings }}</span>
+    </div>
+    <div class="d-flex justify-content-between h5">
+      <strong>Total:</strong>
+      <span class="text-gold fw-bold">KES {{ cart.get_total_price }}</span>
+    </div>
+    <div class="text-end mt-3">
+      <a href="{% url 'checkout' %}" class="btn btn-shop btn-lg fw-semibold">
+        Proceed to Checkout
+      </a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<style>
+.btn-shop {
+  background: #6f42c1; color: #fff; border-radius: 8px; transition: 0.3s;
+}
+.btn-shop:hover { background: #FFD700; color: #000; }
+</style>
+{% endblock %}

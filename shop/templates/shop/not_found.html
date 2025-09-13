@@ -1,0 +1,28 @@
+{% extends "shop/base.html" %}
+{% block title %}Page Not Found - Rian Audio Sounds{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-20 text-center">
+  <div class="max-w-lg mx-auto">
+    
+    <!-- Error Code -->
+    <h1 class="text-7xl font-extrabold text-purple">404</h1>
+    <h2 class="mt-4 text-2xl font-bold text-gray-800">Oops! Page Not Found</h2>
+    <p class="mt-2 text-gray-600">
+      The page you’re looking for doesn’t exist or has been moved.
+    </p>
+
+    <!-- Actions -->
+    <div class="mt-8 flex justify-center space-x-4">
+      <a href="{% url 'home' %}" 
+         class="btn btn-purple px-6 py-3 fw-semibold">
+        Back to Home
+      </a>
+      <a href="{% url 'contact' %}" 
+         class="btn btn-outline-gold px-6 py-3 fw-semibold">
+        Contact Support
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

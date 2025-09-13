@@ -1,0 +1,77 @@
+<footer class="footer-custom text-light py-5 mt-5">
+  <div class="container">
+    <div class="row gy-4">
+      
+      <!-- Brand -->
+      <div class="col-md-4 text-center text-md-start">
+        <h4 class="fw-bold text-gold">Rian Audio Sounds</h4>
+        <p class="small mb-0">&copy; {% now "Y" %} Rian Audio Sounds. All rights reserved.</p>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="col-md-4 text-center text-md-start">
+        <h5 class="fw-semibold mb-3 text-gold">Quick Links</h5>
+        <ul class="list-unstyled">
+          <li><a href="{% url 'home' %}" class="footer-link">Home</a></li>
+          <li><a href="{% url 'products' %}" class="footer-link">Products</a></li>
+          <li><a href="{% url 'contact' %}" class="footer-link">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Newsletter & Social -->
+      <div class="col-md-4 text-center text-md-start">
+        <h5 class="fw-semibold mb-3 text-gold">Stay Connected</h5>
+        
+        <!-- Newsletter -->
+        <form method="post" action="{% url 'subscribe_newsletter' %}" 
+              class="d-flex flex-column flex-sm-row align-items-center align-items-md-start">
+          {% csrf_token %}
+          <label for="newsletter-email" class="visually-hidden">Email address</label>
+          <input type="email" id="newsletter-email" name="email"
+                 class="form-control form-control-sm me-sm-2 mb-2 mb-sm-0"
+                 placeholder="Your email" required>
+          <button type="submit" class="btn btn-gold btn-sm fw-semibold">Subscribe</button>
+        </form>
+
+        <!-- Social & Contact -->
+        <div class="mt-4">
+          <!-- Social icons -->
+          <div class="d-flex gap-3 justify-content-center justify-content-md-start mb-3">
+            <a href="#" class="social-link" aria-label="Facebook"><i class="bi bi-facebook fs-4"></i></a>
+            <a href="#" class="social-link" aria-label="Instagram"><i class="bi bi-instagram fs-4"></i></a>
+            <a href="#" class="social-link" aria-label="Twitter"><i class="bi bi-twitter fs-4"></i></a>
+            {% if site_config.whatsapp_number %}
+              <a href="https://wa.me/{{ site_config.whatsapp_number }}" 
+                 target="_blank" class="social-link" aria-label="WhatsApp"><i class="bi bi-whatsapp fs-4"></i></a>
+            {% endif %}
+            <a href="#" class="social-link" aria-label="TikTok"><i class="bi bi-tiktok fs-4"></i></a>
+          </div>
+
+          <!-- Call & Email buttons -->
+          <div class="d-flex flex-column gap-2">
+            {% if site_config.whatsapp_number %}
+              <a href="tel:{{ site_config.whatsapp_number }}"
+                 class="btn btn-outline-gold btn-sm d-inline-flex align-items-center gap-2 w-fit mx-auto mx-md-0">
+                <i class="bi bi-telephone"></i> Call Us
+              </a>
+            {% endif %}
+            {% if site_config.support_email %}
+              <a href="mailto:{{ site_config.support_email }}"
+                 class="btn btn-outline-gold btn-sm d-inline-flex align-items-center gap-2 w-fit mx-auto mx-md-0">
+                <i class="bi bi-envelope"></i> Email Us
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp Bubble -->
+{% if site_config.whatsapp_number %}
+<a href="https://wa.me/{{ site_config.whatsapp_number }}" 
+   target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp">
+  <i class="bi bi-whatsapp"></i>
+</a>
+{% endif %}

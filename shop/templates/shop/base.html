@@ -1,0 +1,106 @@
+{% load static %}
+{% load nav_extras %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+
+  <title>{% block title %}Rian Audio Sounds{% endblock %}</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Rian Audio Sounds - Premium car sound systems, amplifiers, and custom Jua systems in Nairobi. Shop speakers, subwoofers, and more.">
+  <meta name="keywords" content="car audio, car amplifiers, sound systems, Nairobi, Jua systems, premium speakers, Rian Audio Sounds">
+  <meta name="author" content="Rian Audio Sounds">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#4c1d95"> <!-- brand purple -->
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://rianaudiosounds.com/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Rian Audio Sounds - Premium Car Audio Systems">
+  <meta property="og:description" content="Upgrade your car with premium sound systems, amplifiers, and subwoofers in Nairobi.">
+  <meta property="og:image" content="{% static 'shop/img/preview.jpg' %}">
+  <meta property="og:url" content="https://rianaudiosounds.com/">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Rian Audio Sounds - Premium Car Audio">
+  <meta name="twitter:description" content="Shop premium car sound systems, amplifiers, and Jua systems in Nairobi.">
+  <meta name="twitter:image" content="{% static 'shop/img/preview.jpg' %}">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Rian Audio Sounds",
+    "url": "https://rianaudiosounds.com",
+    "logo": "{% static 'shop/img/favicon.png' %}",
+    "image": "{% static 'shop/img/preview.jpg' %}",
+    "description": "Premium car sound systems, amplifiers, and Jua systems in Nairobi.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Nairobi",
+      "addressCountry": "Kenya"
+    }
+  }
+  </script>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link href="{% static 'shop/css/public.css' %}" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'shop/img/favicon.png' %}">
+  <link rel="icon" type="image/x-icon" href="{% static 'shop/img/favicon.ico' %}">
+
+  {% block extra_meta %}{% endblock %}
+</head>
+<body class="text-dark d-flex flex-column min-vh-100">
+
+  <!-- Header / Navbar -->
+  {% include "components/navbar.html" %}
+
+  <!-- Global Messages -->
+  {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Hero CTA Section (only on home) -->
+  {% block hero %}{% endblock %}
+
+  <!-- Main Content -->
+  <main class="flex-grow-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer --> 
+  {% include "components/footer.html" %}
+
+  <!-- Bootstrap JS (only external script kept) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" defer></script>
+
+  <!-- Page-specific inline scripts -->
+  {% block scripts %}{% endblock %}
+</body>
+</html>

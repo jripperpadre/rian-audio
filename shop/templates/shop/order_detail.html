@@ -1,0 +1,65 @@
+{% extends "shop/base.html" %}
+{% block title %}Order #{{ order.id }} - Rian Audio Sounds{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Header -->
+  <h1 class="h3 fw-bold mb-4 text-purple">Order #{{ order.id }}</h1>
+
+  <!-- Order Info -->
+  <div class="bg-white shadow-sm rounded p-4 mb-4">
+    <p><strong>Date:</strong> {{ order.created_at|date:"M d, Y H:i" }}</p>
+    <p>
+      <strong>Status:</strong>
+      <span class="badge
+        {% if order.status == 'new' %} bg-warning text-dark
+        {% elif order.status == 'processing' %} bg-info text-dark
+        {% elif order.status == 'sent' %} bg-primary
+        {% elif order.status == 'done' %} bg-success
+        {% else %} bg-secondary {% endif %}">
+        {{ order.get_status_display }}
+      </span>
+    </p>
+    <p><strong>Total:</strong> <span class="text-gold fw-semibold">KES {{ order.total }}</span></p>
+    <p><strong>Delivery Address:</strong> {{ order.address.full_name }}, {{ order.address.line1 }}, {{ order.address.city }}</p>
+    {% if order.address.phone %}
+      <p><strong>Phone:</strong> {{ order.address.phone }}</p>
+    {% endif %}
+    {% if order.whatsapp_number %}
+      <p><strong>WhatsApp:</strong> {{ order.whatsapp_number }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Items Table -->
+  <h3 class="h5 fw-bold mb-3 text-purple">Items</h3>
+  <div class="table-responsive bg-white shadow-sm rounded">
+    <table class="table align-middle mb-0">
+      <thead class="bg-purple text-white">
+        <tr>
+          <th>Product</th>
+          <th class="text-center">Quantity</th>
+          <th>Price Each</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in order.items.all %}
+        <tr>
+          <td>{{ item.product.name }}</td>
+          <td class="text-center">{{ item.qty }}</td>
+          <td>KES {{ item.price_each }}</td>
+          <td class="fw-semibold text-gold">KES {{ item.subtotal }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Back Button -->
+  <div class="mt-4">
+    <a href="{% url 'my_orders' %}" class="btn btn-cart shadow-sm">
+      ← Back to My Orders
+    </a>
+  </div>
+</div>
+{% endblock %}

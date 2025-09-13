@@ -1,0 +1,112 @@
+{% extends "shop/base.html" %} 
+{% block title %}Search Results - Rian Audio Sounds{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <!-- Search Form -->
+  <form action="{% url 'search_products' %}" method="get" class="bg-white shadow-sm rounded p-3 mb-4">
+    <div class="row g-2">
+      
+      <!-- Search text -->
+      <div class="col-12 col-md-6">
+        <input 
+          type="text" 
+          name="q" 
+          class="form-control" 
+          placeholder="Search products..."
+          value="{{ query|default:'' }}">
+      </div>
+
+      <!-- Category filter -->
+      <div class="col-6 col-md-4">
+        <select name="category" class="form-select">
+          <option value="">All Categories</option>
+          {% for cat in categories %}
+            <option value="{{ cat.slug }}" {% if selected_category == cat.slug %}selected{% endif %}>
+              {{ cat.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Search button -->
+      <div class="col-6 col-md-2">
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="bi bi-search me-1"></i> Search
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Search Results -->
+  {% if products %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h5 class="mb-0">
+        Found {{ products.count }} product{{ products.count|pluralize }}
+        {% if query %} for "<strong>{{ query }}</strong>"{% endif %}
+        {% if selected_category %} in <strong>{{ selected_category }}</strong>{% endif %}
+      </h5>
+    </div>
+
+    <div class="row g-4">
+      {% for product in products %}
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="card h-100 shadow-sm">
+            {% if product.images.first %}
+              <img src="{{ product.images.first.image.url }}" class="card-img-top" alt="{{ product.name }}">
+            {% else %}
+              <img src="{% static 'shop/img/no-image.png' %}" class="card-img-top" alt="No image">
+            {% endif %}
+
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text small text-muted mb-2">{{ product.category.name }}</p>
+              <p class="card-text flex-grow-1">{{ product.description|truncatewords:15 }}</p>
+              <p class="fw-bold mb-3">KES {{ product.price }}</p>
+              <a href="{% url 'product_detail' product.slug %}" class="btn btn-sm btn-outline-primary mt-auto">
+                View Product
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+      <nav aria-label="Search results pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?q={{ query }}&category={{ selected_category }}&page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+              <a class="page-link" href="?q={{ query }}&category={{ selected_category }}&page={{ num }}">{{ num }}</a>
+            </li>
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?q={{ query }}&category={{ selected_category }}&page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+
+  {% else %}
+    <div class="alert alert-warning text-center shadow-sm">
+      No products found{% if query %} for "<strong>{{ query }}</strong>"{% endif %}.
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

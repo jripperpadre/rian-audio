@@ -1,0 +1,57 @@
+{% extends "shop/base.html" %}
+{% block title %}My Orders - Rian Audio Sounds{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  
+  <!-- Page Header -->
+  <h1 class="h3 fw-bold mb-4 text-purple">My Orders</h1>
+
+  {% if orders %}
+    <div class="table-responsive bg-white shadow-sm rounded">
+      <table class="table align-middle mb-0">
+        <thead class="bg-purple text-white">
+          <tr>
+            <th>Order #</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <td class="fw-semibold text-gold">#{{ order.id }}</td>
+            <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+            <td>
+              <span class="badge 
+                {% if order.status == 'processing' %} bg-warning text-dark
+                {% elif order.status == 'sent' %} bg-info
+                {% elif order.status == 'done' %} bg-success
+                {% else %} bg-secondary {% endif %}">
+                {{ order.status|title }}
+              </span>
+            </td>
+            <td>KES {{ order.total }}</td>
+            <td class="text-center">
+              <a href="{% url 'order_detail' order.id %}" 
+                 class="btn btn-sm btn-outline-gold px-3">
+                View
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="bg-white shadow-sm rounded p-4 text-center">
+      <p class="text-muted mb-3">You haven’t placed any orders yet.</p>
+      <a href="{% url 'home' %}" class="btn btn-purple px-4 fw-semibold shadow-sm">
+        Start Shopping
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

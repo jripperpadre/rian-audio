@@ -1,0 +1,40 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm mb-4" style="border-left:5px solid #4c1d95;">
+      <div class="card-body">
+        <h5 class="text-purple">📦 Products</h5>
+        <h3>{{ total_products }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm mb-4" style="border-left:5px solid #f59e0b;">
+      <div class="card-body">
+        <h5 class="text-gold">🛒 Orders</h5>
+        <h3>{{ total_orders }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm mb-4" style="border-left:5px solid #6d28d9;">
+      <div class="card-body">
+        <h5 class="text-purple">👥 Users</h5>
+        <h3>{{ total_users }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card text-center shadow-sm mb-4" style="border-left:5px solid green;">
+      <div class="card-body">
+        <h5 class="text-success">💰 Revenue</h5>
+        <h3>KES {{ revenue }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ block.super }}
+{% endblock %}

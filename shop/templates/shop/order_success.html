@@ -1,0 +1,45 @@
+{% extends "shop/base.html" %}
+{% block title %}Order Success - Rian Audio Sounds{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+  
+  <!-- Success Icon -->
+  <div class="bg-purple bg-opacity-10 d-inline-flex p-4 rounded-circle">
+    <svg xmlns="http://www.w3.org/2000/svg" 
+         width="64" height="64" fill="none" stroke="currentColor" stroke-width="2"
+         class="text-purple" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+    </svg>
+  </div>
+
+  <!-- Success Text -->
+  <div class="mt-4">
+    <h1 class="h3 fw-bold text-purple">Thank You for Your Order!</h1>
+    {% if order %}
+      <p class="text-muted mt-2">
+        Your order <strong class="text-gold">#{{ order.id }}</strong> has been placed successfully.
+      </p>
+      {% if order.whatsapp_number %}
+      <p class="text-secondary">
+        We’ll contact you via WhatsApp at {{ order.whatsapp_number }}.
+      </p>
+      {% endif %}
+    {% else %}
+      <p class="text-muted mt-2">Your order has been placed successfully.</p>
+    {% endif %}
+  </div>
+
+  <!-- Actions -->
+  <div class="mt-5 d-flex justify-content-center gap-3">
+    <a href="{% url 'home' %}" class="btn btn-purple px-4 fw-semibold shadow-sm">
+      Back to Home
+    </a>
+    {% if user.is_authenticated %}
+    <a href="{% url 'my_orders' %}" class="btn btn-outline-gold px-4 fw-semibold shadow-sm">
+      View My Orders
+    </a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "shop/base.html" %}
+{% block title %}Server Error - Rian Audio Sounds{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-20 text-center">
+  <div class="max-w-lg mx-auto">
+    <h1 class="text-7xl font-extrabold text-red-600">500</h1>
+    <h2 class="mt-4 text-2xl font-bold text-gray-800">Oops! Something Went Wrong</h2>
+    <p class="mt-2 text-gray-600">
+      We’re experiencing technical issues. Please try again later.
+    </p>
+
+    <div class="mt-8 flex justify-center space-x-4">
+      <a href="{% url 'home' %}" 
+         class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-500 transition">
+        Back to Home
+      </a>
+      <a href="{% url 'contact' %}" 
+         class="bg-gray-100 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition">
+        Contact Support
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

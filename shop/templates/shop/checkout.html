@@ -1,0 +1,153 @@
+{% extends "shop/base.html" %}
+{% block title %}Checkout - Rian Audio Sounds{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h1 class="h3 fw-bold mb-4 text-purple">Checkout</h1>
+
+  {% if cart_items %}
+  <div class="row g-4">
+
+    <!-- Assisted Checkout (Recommended) -->
+    <div class="col-12">
+      <div class="alert bg-light shadow-sm border-start border-4 border-purple">
+        <h2 class="h5 fw-semibold mb-3 text-purple">Assisted Checkout (Recommended)</h2>
+        <p class="mb-3">
+          For the fastest service and timely response, we recommend reaching out directly.
+          Your cart details (with images) will be included automatically for convenience.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          <!-- WhatsApp button -->
+          <a id="whatsapp-link" target="_blank" class="btn btn-success fw-semibold shadow-sm">
+            <i class="bi bi-whatsapp"></i> WhatsApp Us
+          </a>
+          <!-- Call button -->
+          <a href="tel:+254712345678" class="btn btn-purple fw-semibold shadow-sm">
+            <i class="bi bi-telephone"></i> Call Us
+          </a>
+          <!-- Email button -->
+          <a id="email-link" class="btn btn-cart fw-semibold shadow-sm">
+            <i class="bi bi-envelope"></i> Email Us
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="col-12">
+      <hr>
+      <h2 class="h5 fw-semibold text-center text-purple">Or proceed with online checkout below</h2>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="col-12 col-md-8">
+      <h2 class="h5 fw-semibold mb-3 text-purple">Your Order</h2>
+
+      <div class="vstack gap-3">
+        {% for item in cart_items %}
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-2">
+          <div class="d-flex align-items-center gap-3">
+            {% if item.image_url %}
+              <img src="{{ item.image_url }}" alt="{{ item.product.name }}" class="rounded shadow-sm" style="width: 60px; height: auto;">
+            {% endif %}
+            <div>
+              <p class="fw-medium mb-0">{{ item.product.name }}</p>
+              <small class="text-muted">Qty: {{ item.quantity }}</small>
+            </div>
+          </div>
+          <p class="fw-semibold mb-0 text-purple">KES {{ item.total_price }}</p>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-4 fw-bold fs-5 border-top pt-3">
+        <span>Total:</span>
+        <span class="text-gold">KES {{ total }}</span>
+      </div>
+    </div>
+
+    <!-- Checkout Form -->
+    <div class="col-12 col-md-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h2 class="h5 fw-semibold mb-3 text-purple">Shipping Info</h2>
+
+          <form id="checkout-form" method="post" action="{% url 'place_order' %}" class="vstack gap-3">
+            {% csrf_token %}
+
+            <!-- Existing Address -->
+            {% if addresses %}
+            <div>
+              <label for="address_id" class="form-label text-purple">Choose saved address</label>
+              <select name="address_id" id="address_id" class="form-select shadow-sm">
+                <option value="">-- Add a new address --</option>
+                {% for addr in addresses %}
+                  <option value="{{ addr.id }}">
+                    {{ addr.full_name }} - {{ addr.line1 }}, {{ addr.city }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+            {% endif %}
+
+            <!-- New Address -->
+            <div id="new-address-fields" class="vstack gap-2 mt-2" {% if addresses %}style="display:none;"{% endif %}>
+              <input type="text" name="full_name" class="form-control shadow-sm" placeholder="Full Name">
+              <input type="tel" name="phone" class="form-control shadow-sm" placeholder="Phone (can be WhatsApp or normal)">
+              <input type="text" name="line1" class="form-control shadow-sm" placeholder="Address Line 1">
+              <input type="text" name="line2" class="form-control shadow-sm" placeholder="Address Line 2 (optional)">
+              <input type="text" name="city" class="form-control shadow-sm" placeholder="City">
+              <textarea name="notes" rows="2" class="form-control shadow-sm" placeholder="Delivery notes (optional)"></textarea>
+            </div>
+
+            <!-- Contact Number -->
+            <input type="tel" name="whatsapp_number" 
+                   placeholder="Preferred contact (WhatsApp or normal phone)" 
+                   class="form-control shadow-sm" required>
+
+            <button type="submit" class="btn btn-shop w-100 fw-semibold shadow-sm">
+              Place Order
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+    <p class="text-muted">
+      Your cart is empty. 
+      <a href="{% url 'home' %}" class="text-purple fw-semibold text-decoration-none">Continue shopping</a>.
+    </p>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const addressSelect = document.getElementById("address_id");
+const newAddressFields = document.getElementById("new-address-fields");
+
+if (addressSelect) {
+  addressSelect.addEventListener("change", () => {
+    newAddressFields.style.display = addressSelect.value ? "none" : "block";
+  });
+}
+
+// Build cart summary for WhatsApp & Email
+const cartItems = [
+  {% for item in cart_items %}
+  "{{ item.product.name }} (x{{ item.quantity }}) - KES {{ item.total_price }}{% if item.image_url %} - {{ item.image_url }}{% endif %}",
+  {% endfor %}
+];
+const total = "Total: KES {{ total }}";
+const message = encodeURIComponent("Hello, I would like to checkout my order:\n\n" + cartItems.join("\n") + "\n\n" + total);
+
+// WhatsApp link
+const whatsappLink = document.getElementById("whatsapp-link");
+whatsappLink.href = "https://wa.me/254712345678?text=" + message;
+
+// Email link
+const emailLink = document.getElementById("email-link");
+emailLink.href = "mailto:info@rianaudiosounds.com?subject=Checkout%20Assistance&body=" + message;
+</script>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}Products - Rian Audio Sounds{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h1 class="h3 fw-bold mb-4 text-center text-purple">Our Products</h1>
+
+  <!-- ✅ Filter & Sort Controls -->
+  <form method="get" class="row g-3 align-items-center mb-4">
+    <div class="col-md-4">
+      <select name="category" class="form-select" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        {% for cat in categories %}
+          <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+            {{ cat.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <select name="sort" class="form-select" onchange="this.form.submit()">
+        <option value="">Sort by</option>
+        <option value="newest" {% if request.GET.sort == "newest" %}selected{% endif %}>Newest</option>
+        <option value="price_asc" {% if request.GET.sort == "price_asc" %}selected{% endif %}>Price: Low → High</option>
+        <option value="price_desc" {% if request.GET.sort == "price_desc" %}selected{% endif %}>Price: High → Low</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <input type="text" name="q" class="form-control" placeholder="Search products..." value="{{ request.GET.q }}">
+    </div>
+  </form>
+  <!-- End Controls -->
+
+  {% if products %}
+  <div class="row g-4">
+    {% for product in products %}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+      <div class="card product-card h-100 shadow-sm border-0 position-relative">
+
+        <!-- Product Image -->
+        <a href="{% url 'product_detail' product.slug %}">
+          {% if product.main_image %}
+            <img src="{{ product.main_image.url }}" 
+                 alt="{{ product.name }} - {{ product.category.name }}"
+                 loading="lazy"
+                 class="card-img-top rounded-top"
+                 style="height: 200px; object-fit: cover;">
+          {% else %}
+            <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-top" 
+                 style="height: 200px;">
+              No Image
+            </div>
+          {% endif %}
+        </a>
+
+        <!-- Badge -->
+        {% if product.is_new %}
+          <span class="badge bg-success position-absolute top-0 start-0 m-2">New</span>
+        {% elif product.on_sale %}
+          <span class="badge bg-danger position-absolute top-0 start-0 m-2">Sale</span>
+        {% elif product.is_best_seller %}
+          <span class="badge bg-gold text-dark position-absolute top-0 start-0 m-2">Best Seller</span>
+        {% endif %}
+
+        <!-- Card Body -->
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title fw-semibold text-dark text-truncate d-block">{{ product.name }}</h5>
+          <p class="text-muted small mb-1">{{ product.category.name }}</p>
+          <p class="fw-bold text-gold">
+            {{ product.price|floatformat:0 }} KES
+            {% if product.old_price %}
+              <span class="text-muted text-decoration-line-through small ms-1">
+                {{ product.old_price|floatformat:0 }} KES
+              </span>
+            {% endif %}
+          </p>
+
+          <!-- ✅ Actions -->
+          <div class="mt-auto">
+            <form method="post" action="{% url 'add_to_cart' product.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="btn btn-shop w-100 mb-2">
+                <i class="bi bi-cart-plus me-1"></i> Add to Cart
+              </button>
+            </form>
+            <a href="https://wa.me/{{ product.display_whatsapp|cut:'+'|cut:' ' }}" 
+               class="btn btn-success w-100"
+               target="_blank">
+              <i class="bi bi-whatsapp me-1"></i> Help on WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p class="text-center text-muted">No products available at the moment.</p>
+  {% endif %}
+</div>
+
+<style>
+.btn-shop {
+  background: #6f42c1; color: #fff; border-radius: 8px; transition: 0.3s;
+}
+.btn-shop:hover { background: #FFD700; color: #000; }
+</style>
+{% endblock %}
