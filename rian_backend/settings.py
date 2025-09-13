@@ -12,7 +12,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ------------------------------
 # SECURITY
 # ------------------------------
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret-change-me")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY") or os.getenv("SECRET_KEY", "dev-secret-change-me")
+
 DEBUG = os.getenv("DEBUG", "1") == "1"
 
 ALLOWED_HOSTS = os.getenv(
