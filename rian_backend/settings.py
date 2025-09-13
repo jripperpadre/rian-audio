@@ -141,6 +141,7 @@ INSTALLED_APPS += [
 ]
 
 # Cloudinary Storage for media files
+
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # Static files (CSS, JS, images served by WhiteNoise)
@@ -300,3 +301,4 @@ JAZZMIN_UI_TWEAKS = {
 }
 
 CART_SESSION_ID = "cart"
+
