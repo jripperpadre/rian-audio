@@ -4,6 +4,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 from django.contrib.messages import constants as messages
+import cloudinary
 
 load_dotenv()
 
@@ -142,10 +143,11 @@ import cloudinary.uploader
 import cloudinary.api
 
 cloudinary.config(
-    cloud_name=os.getenv("@drfu5ongy"),
-    api_key=os.getenv("565488528531148"),
-    api_secret=os.getenv("6PHI_jZD9OipNipyJWIYVq5Y7aQ"),
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
 )
+
 
 
 # All media uploads go to Cloudinary
