@@ -127,13 +127,34 @@ USE_TZ = True
 # ------------------------------
 # Static & Media
 # ------------------------------
+# ------------------------------
+# Static & Media
+# ------------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Media uploads
+# ------------------------------
+# Cloudinary
+# ------------------------------
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+cloudinary.config(
+    cloud_name=os.getenv("@drfu5ongy"),
+    api_key=os.getenv("565488528531148"),
+    api_secret=os.getenv("6PHI_jZD9OipNipyJWIYVq5Y7aQ"),
+)
+
+
+# All media uploads go to Cloudinary
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-MEDIA_URL = "/media/"  # Required even when using Cloudinary
+
+# You don’t really need MEDIA_URL anymore,
+# but Django still expects it to exist.
+MEDIA_URL = "/media/"
+
 
 # ------------------------------
 # CORS
