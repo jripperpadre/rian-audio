@@ -15,7 +15,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "dev-secret-change-me")
 DEBUG = os.getenv("DEBUG", "1") == "1"
 
-# ✅ Allow localhost + Render domain (set via env variable)
 ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS",
     "localhost,127.0.0.1,rian-audio.onrender.com"
@@ -37,12 +36,12 @@ INSTALLED_APPS = [
     # Third-party
     "rest_framework",
     "corsheaders",
+    "widget_tweaks",
+    "cloudinary",
+    "cloudinary_storage",
 
     # Local apps
     "shop",
-
-    # Widgets (for styling)
-    "widget_tweaks",
 ]
 
 # ------------------------------
@@ -93,9 +92,6 @@ TEMPLATES = [
 # ------------------------------
 # Database (SQLite fallback, Postgres for prod)
 # ------------------------------
-# ------------------------------
-# Database (SQLite for dev, Postgres for production)
-# ------------------------------
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -104,12 +100,11 @@ DATABASES = {
 }
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-
 if DATABASE_URL:
     DATABASES["default"] = dj_database_url.config(
         default=DATABASE_URL,
         conn_max_age=600,
-        ssl_require=not DEBUG,  # force SSL only in production
+        ssl_require=not DEBUG,  # require SSL only in production
     )
 
 # ------------------------------
@@ -131,39 +126,24 @@ USE_TZ = True
 # ------------------------------
 # Static & Media
 # ------------------------------
-# ------------------------------
-# Static & Media
-# ------------------------------
-
-INSTALLED_APPS += [
-    "cloudinary",
-    "cloudinary_storage",
-]
-
-# Cloudinary Storage for media files
-
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
-
-# Static files (CSS, JS, images served by WhiteNoise)
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# ❌ Remove MEDIA_ROOT since Cloudinary handles uploads
-# MEDIA_URL = "/media/"
-# MEDIA_ROOT = BASE_DIR / "media"
-
-
-# ✅ WhiteNoise for production
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+if DEBUG:
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media"
+else:
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # ------------------------------
 # CORS
 # ------------------------------
 CORS_ALLOW_ALL_ORIGINS = DEBUG
-CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:3000").split(",")
+CORS_ALLOWED_ORIGINS = os.getenv(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:3000"
+).split(",")
 
 # ------------------------------
 # DRF + JWT
@@ -187,7 +167,6 @@ SIMPLE_JWT = {
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
-# ✅ Add Render domain to CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = os.getenv(
     "CSRF_TRUSTED_ORIGINS",
     "http://localhost,http://127.0.0.1,https://rian-audio.onrender.com"
@@ -206,7 +185,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Authentication
 # ------------------------------
 AUTH_USER_MODEL = "shop.CustomUser"
-
 AUTHENTICATION_BACKENDS = [
     "shop.backends.UsernameOrEmailBackend",
     "django.contrib.auth.backends.ModelBackend",  # fallback
@@ -232,17 +210,13 @@ JAZZMIN_SETTINGS = {
     "site_brand": "Rian Audio",
     "welcome_sign": "🎵 Welcome to Rian Audio Sounds Dashboard",
     "copyright": "© 2025 Rian Audio Sounds",
-
     "show_sidebar": True,
     "navigation_expanded": True,
     "custom_sidebar": True,
-
     "site_logo": "shop/img/logo.png",
     "site_logo_classes": "img-circle",
     "site_icon": "shop/img/favicon.ico",
-
     "custom_css": "shop/css/admin_custom.css",
-
     "topmenu_links": [
         {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
         {"name": "Storefront", "url": "/", "new_window": True},
@@ -250,7 +224,6 @@ JAZZMIN_SETTINGS = {
         {"model": "auth.Group"},
         {"app": "shop"},
     ],
-
     "icons": {
         "shop.Product": "fas fa-music",
         "shop.Category": "fas fa-folder",
@@ -264,15 +237,7 @@ JAZZMIN_SETTINGS = {
         "auth.User": "fas fa-user",
         "auth.Group": "fas fa-users",
     },
-
-    "order_with_respect_to": [
-        "shop",
-        "auth",
-        "sites",
-        "sessions",
-        "admin",
-    ],
-
+    "order_with_respect_to": ["shop", "auth", "sites", "sessions", "admin"],
     "related_modal_active": True,
     "changeform_format": "horizontal_tabs",
     "changeform_format_overrides": {"auth.user": "collapsible"},
@@ -300,5 +265,7 @@ JAZZMIN_UI_TWEAKS = {
     },
 }
 
+# ------------------------------
+# Cart
+# ------------------------------
 CART_SESSION_ID = "cart"
-
