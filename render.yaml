@@ -1,7 +1,6 @@
-# render.yaml
 services:
   - type: web
-    name: rian-audio-sounds
+    name: rian-audio
     env: python
     plan: free
     buildCommand: |
@@ -15,17 +14,23 @@ services:
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: rian_backend.settings
-      - key: DATABASE_URL
-        fromDatabase:
-          name: rian-db
-          property: connectionString
+      - key: ALLOWED_HOSTS
+        value: rian-audio.onrender.com,127.0.0.1,localhost
       - key: CLOUDINARY_URL
-        sync: false   # set manually in Render dashboard
-      - key: DJANGO_SECRET_KEY
-        generateValue: true
+        value: cloudinary://565488528531148:6PHI_jZD9OipNipyJWIYVq5Y7aQ@drfu5ongy
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://rian-audio.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://rian-audio.onrender.com
+      - key: DATABASE_URL
+        value: postgresql://rian_audio_db_sda5_user:V6dUrcReC6LCk0BOMsqQSdSj9JtQqZWS@dpg-d32rk3buibrs73a4gkbg-a/rian_audio_db_sda5
       - key: DEBUG
         value: False
-
-databases:
-  - name: rian-db
-    plan: free
+      - key: DJANGO_SECRET_KEY
+        value: super-secret-key
+      - key: DJANGO_SUPERUSER_USERNAME
+        value: admin
+      - key: DJANGO_SUPERUSER_EMAIL
+        value: admin@example.com
+      - key: DJANGO_SUPERUSER_PASSWORD
+        value: adminpass123
