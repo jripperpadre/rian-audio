@@ -294,5 +294,3 @@ CART_SESSION_ID = "cart"
 
 
 
-
-DEBUG = True
