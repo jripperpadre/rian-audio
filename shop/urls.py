@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import views
 from .views import (
     SignUpView, CustomLoginView, CustomLogoutView,
-    CustomPasswordResetView, CustomPasswordResetConfirmView,
+    CustomPasswordResetView, CustomPasswordResetConfirmView, upload_test
 )
 
 # ------------------------------
@@ -78,4 +78,6 @@ urlpatterns = [
         name="product_image_delete",
     ),
     path("testimonials/", views.testimonials, name="testimonials"),
+
+    path("upload-test/", upload_test, name="upload_test"),
 ]

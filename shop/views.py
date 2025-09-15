@@ -13,7 +13,9 @@ from django.conf import settings
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from .models import NewsletterSubscription
-
+from django import forms
+from django.shortcuts import render
+from django.conf import settings
 
 
 from django.contrib.auth.views import (
@@ -504,3 +506,27 @@ def subscribe_newsletter(request):
 
 def newsletter_page(request):
     return render(request, "shop/newsletter.html")
+
+
+
+#############################################
+# Simple form with an image field
+
+
+class UploadTestForm(forms.Form):
+    image = forms.ImageField()
+
+def upload_test(request):
+    url = None
+    if request.method == "POST":
+        form = UploadTestForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Save directly using default storage (Cloudinary)
+            image = form.cleaned_data["image"]
+            from django.core.files.storage import default_storage
+            path = default_storage.save(image.name, image)
+            url = default_storage.url(path)
+    else:
+        form = UploadTestForm()
+
+    return render(request, "shop/upload_test.html", {"form": form, "url": url})

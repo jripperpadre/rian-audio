@@ -1,0 +1,22 @@
+{% extends "shop/base.html" %}
+{% block title %}Upload Test{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="h4 fw-bold mb-4">Upload Test to Cloudinary</h2>
+
+  <form method="post" enctype="multipart/form-data" class="mb-4">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Upload</button>
+  </form>
+
+  {% if url %}
+    <div class="alert alert-success">
+      ✅ Uploaded successfully! <br>
+      <a href="{{ url }}" target="_blank">{{ url }}</a>
+    </div>
+    <img src="{{ url }}" alt="Uploaded Image" class="img-fluid mt-3">
+  {% endif %}
+</div>
+{% endblock %}

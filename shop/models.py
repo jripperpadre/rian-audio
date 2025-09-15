@@ -3,6 +3,7 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.utils import timezone
+from cloudinary.models import CloudinaryField
 
 
 class TimeStamped(models.Model):
@@ -16,7 +17,7 @@ class TimeStamped(models.Model):
 class Testimonial(TimeStamped):
     name = models.CharField(max_length=100)
     message = models.TextField()
-    avatar = models.ImageField(upload_to="testimonials/", blank=True, null=True)
+    avatar = CloudinaryField(folder="testimonials/", blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} - {self.message[:30]}"
@@ -42,7 +43,7 @@ class ContactMessage(TimeStamped):
 class Category(TimeStamped):
     name = models.CharField(max_length=120, unique=True)
     slug = models.SlugField(max_length=140, unique=True, blank=True)
-    image = models.ImageField(upload_to="categories/", blank=True, null=True)
+    image = CloudinaryField(folder="categories/", blank=True, null=True)
 
     class Meta:
         ordering = ["name"]
@@ -78,9 +79,9 @@ class Product(TimeStamped):
     )
 
     # ✅ Main image (required in form, optional in DB for safety)
-    main_image = models.ImageField(
-        upload_to="products/main/",
-        blank=False,
+    main_image = CloudinaryField(
+        folder="products/main/",
+        blank=True,
         null=True,
         help_text="Main product image (shown as thumbnail and hero)"
     )
@@ -140,8 +141,8 @@ class ProductImage(TimeStamped):
         on_delete=models.CASCADE,
         related_name="images"
     )
-    image = models.ImageField(
-        upload_to="products/gallery/",
+    image = CloudinaryField(
+        folder="products/gallery/",
         help_text="Additional gallery image"
     )
 
