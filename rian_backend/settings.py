@@ -291,3 +291,8 @@ JAZZMIN_UI_TWEAKS = {
 # Cart
 # ------------------------------
 CART_SESSION_ID = "cart"
+
+
+
+
+DEBUG = True
