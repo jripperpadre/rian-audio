@@ -92,27 +92,22 @@ TEMPLATES = [
 ]
 
 # ------------------------------
-# Database (MongoDB via Djongo)
+# Database (SQLite fallback, Postgres for prod)
 # ------------------------------
-MONGO_URI = os.getenv("MONGO_URI")
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
 
-if MONGO_URI:
-    DATABASES = {
-        "default": {
-            "ENGINE": "djongo",
-            "NAME": "rian_audio_db",  # your DB name
-            "CLIENT": {
-                "host": MONGO_URI,
-            }
-        }
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES["default"] = dj_database_url.config(
+        default=DATABASE_URL,
+        conn_max_age=600,
+        ssl_require=not DEBUG,  # require SSL in production
+    )
 
 # ------------------------------
 # Password validation
