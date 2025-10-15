@@ -10,8 +10,8 @@ cloudinary==1.44.1
 colorama==0.4.6
 cryptography==45.0.7
 cssselect2==0.8.0
-dj-database-url==3.0.1
-Django==3.1.12
+dj-database-url==3.0.1 
+Django==4.2.16
 django-cloudinary-storage==0.3.0
 django-crispy-forms==2.4
 django-jazzmin==3.0.1
