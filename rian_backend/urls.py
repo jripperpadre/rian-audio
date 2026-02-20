@@ -17,5 +17,6 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Custom error handlers
-handler404 = "shop.views.handle_404"
-handler500 = "shop.views.handle_500"
+handler403 = "shop.views.error_403"
+handler404 = "shop.views.error_404"
+handler500 = "shop.views.error_500"

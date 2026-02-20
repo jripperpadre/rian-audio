@@ -1,15 +1,15 @@
-<footer class="footer-custom text-light py-5 mt-5">
+<footer class="footer-custom text-light py-4 py-md-5 mt-5">
   <div class="container">
     <div class="row gy-4">
       
       <!-- Brand -->
-      <div class="col-md-4 text-center text-md-start">
-        <h4 class="fw-bold text-gold">Rian Audio Sounds</h4>
+      <div class="col-12 col-md-4 text-center text-md-start">
+        <h4 class="fw-bold text-gold mb-2">Rian Audio Sounds</h4>
         <p class="small mb-0">&copy; {% now "Y" %} Rian Audio Sounds. All rights reserved.</p>
       </div>
 
       <!-- Quick Links -->
-      <div class="col-md-4 text-center text-md-start">
+      <div class="col-12 col-md-4 text-center text-md-start">
         <h5 class="fw-semibold mb-3 text-gold">Quick Links</h5>
         <ul class="list-unstyled">
           <li><a href="{% url 'home' %}" class="footer-link">Home</a></li>
@@ -19,16 +19,15 @@
       </div>
 
       <!-- Newsletter & Social -->
-      <div class="col-md-4 text-center text-md-start">
+      <div class="col-12 col-md-4 text-center text-md-start">
         <h5 class="fw-semibold mb-3 text-gold">Stay Connected</h5>
         
         <!-- Newsletter -->
-        <form method="post" action="{% url 'subscribe_newsletter' %}" 
-              class="d-flex flex-column flex-sm-row align-items-center align-items-md-start">
+        <form id="newsletter-form" method="post" action="{% url 'subscribe_newsletter' %}">
           {% csrf_token %}
           <label for="newsletter-email" class="visually-hidden">Email address</label>
           <input type="email" id="newsletter-email" name="email"
-                 class="form-control form-control-sm me-sm-2 mb-2 mb-sm-0"
+                 class="form-control form-control-sm"
                  placeholder="Your email" required>
           <button type="submit" class="btn btn-gold btn-sm fw-semibold">Subscribe</button>
         </form>
@@ -36,28 +35,28 @@
         <!-- Social & Contact -->
         <div class="mt-4">
           <!-- Social icons -->
-          <div class="d-flex gap-3 justify-content-center justify-content-md-start mb-3">
-            <a href="https://www.facebook.com/profile.php?id=61561903380922" class="social-link" aria-label="Facebook"><i class="bi bi-facebook fs-4"></i></a>
-            <a href="#" class="social-link" aria-label="Instagram"><i class="bi bi-instagram fs-4"></i></a>
-            <a href="#" class="social-link" aria-label="Twitter"><i class="bi bi-twitter fs-4"></i></a>
+          <div class="d-flex gap-3 justify-content-center justify-content-md-start mb-3 flex-wrap">
+            <a href="https://www.facebook.com/profile.php?id=61561903380922" class="social-link" aria-label="Facebook"><i class="bi bi-facebook fs-5"></i></a>
+            <a href="#" class="social-link" aria-label="Instagram"><i class="bi bi-instagram fs-5"></i></a>
+            <a href="#" class="social-link" aria-label="Twitter"><i class="bi bi-twitter fs-5"></i></a>
             {% if site_config.whatsapp_number %}
               <a href="https://wa.me/{{ site_config.whatsapp_number|default:'+254768873350' }}" 
-                 target="_blank" class="social-link" aria-label="WhatsApp"><i class="bi bi-whatsapp fs-4"></i></a>
+                 target="_blank" class="social-link" aria-label="WhatsApp"><i class="bi bi-whatsapp fs-5"></i></a>
             {% endif %}
-            <a href="https://www.tiktok.com/@rian.audio.sound" class="social-link" aria-label="TikTok"><i class="bi bi-tiktok fs-4"></i></a>
+            <a href="https://www.tiktok.com/@rian.audio.sound" class="social-link" aria-label="TikTok"><i class="bi bi-tiktok fs-5"></i></a>
           </div>
 
           <!-- Call & Email buttons -->
-          <div class="d-flex flex-column gap-2">
+          <div class="d-flex flex-column gap-2 align-items-center align-items-md-start">
             {% if site_config.whatsapp_number %}
               <a href="tel:{{ site_config.whatsapp_number }}"
-                 class="btn btn-outline-gold btn-sm d-inline-flex align-items-center gap-2 w-fit mx-auto mx-md-0">
+                 class="btn btn-outline-gold btn-sm d-inline-flex align-items-center gap-2">
                 <i class="bi bi-telephone"></i> Call Us
               </a>
             {% endif %}
             {% if site_config.support_email %}
               <a href="mailto:{{ site_config.support_email }}"
-                 class="btn btn-outline-gold btn-sm d-inline-flex align-items-center gap-2 w-fit mx-auto mx-md-0">
+                 class="btn btn-outline-gold btn-sm d-inline-flex align-items-center gap-2">
                 <i class="bi bi-envelope"></i> Email Us
               </a>
             {% endif %}

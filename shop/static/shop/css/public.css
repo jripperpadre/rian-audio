@@ -23,10 +23,13 @@ a:hover {
 /* ===== Navbar ===== */
 .navbar {
   background-color: #4c1d95; /* deep purple */
+  padding: 0.75rem 0;
 }
 .navbar .nav-link {
   color: #fff !important;
   font-weight: 500;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.95rem;
 }
 .navbar .nav-link:hover {
   color: #f59e0b !important; /* gold */
@@ -34,7 +37,17 @@ a:hover {
 .navbar-brand {
   color: #f59e0b !important;
   font-weight: 700;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
+}
+
+/* Navbar brand responsive */
+@media (min-width: 576px) {
+  .navbar-brand {
+    font-size: 1.25rem;
+  }
+  .navbar .nav-link {
+    font-size: 1rem;
+  }
 }
 
 /* ===== Navbar Dropdown ===== */
@@ -47,6 +60,8 @@ a:hover {
 .navbar .dropdown-item {
   color: #fff;
   transition: background 0.2s, color 0.2s;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
 }
 .navbar .dropdown-item:hover,
 .navbar .dropdown-item.active {
@@ -55,33 +70,103 @@ a:hover {
   font-weight: 600;
 }
 
+/* Mobile navbar search */
+.navbar .d-flex {
+  flex-direction: column !important;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .navbar .d-flex {
+    flex-direction: row !important;
+    width: auto;
+  }
+}
+
 /* ===== Hero Section ===== */
 .hero-section {
   background: linear-gradient(rgba(76,29,149,0.85), rgba(76,29,149,0.85)),
               url('/static/shop/img/hero-bg.jpg') center/cover no-repeat;
   color: white;
-  padding: 6rem 2rem;
+  padding: 3rem 1.5rem;
   text-align: center;
   border-bottom-left-radius: 2rem;
   border-bottom-right-radius: 2rem;
+  min-height: 50vh;
 }
 .hero-section h1 {
-  font-size: 3.25rem;
+  font-size: 1.75rem;
   font-weight: 700;
   letter-spacing: -0.5px;
   text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  margin-bottom: 1rem;
 }
 .hero-section p {
-  font-size: 1.2rem;
+  font-size: 1rem;
   opacity: 0.95;
   color: #f3f4f6;
+  margin-bottom: 0.75rem;
+}
+
+/* Hero Buttons Mobile */
+.hero-section .btn {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+/* Hero responsive for tablets */
+@media (min-width: 576px) {
+  .hero-section h1 {
+    font-size: 2.5rem;
+  }
+  .hero-section p {
+    font-size: 1.1rem;
+  }
+  .hero-section {
+    padding: 4rem 2rem;
+  }
+  .hero-section .btn {
+    width: auto;
+    margin-bottom: 0;
+    margin-right: 0.5rem;
+  }
+}
+
+/* Hero responsive for desktops */
+@media (min-width: 992px) {
+  .hero-section h1 {
+    font-size: 3.25rem;
+  }
+  .hero-section p {
+    font-size: 1.2rem;
+  }
+  .hero-section {
+    padding: 6rem 2rem;
+    min-height: 80vh;
+  }
 }
 
 /* ===== Section Headings ===== */
 section h2 {
   color: #4c1d95;
   font-weight: 700;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+@media (min-width: 576px) {
+  section h2 {
+    font-size: 1.75rem;
+    margin-bottom: 2rem;
+  }
+}
+
+@media (min-width: 992px) {
+  section h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
 }
 
 /* ===== Product Cards ===== */
@@ -98,11 +183,36 @@ section h2 {
 .product-card .card-title {
   color: #4c1d95;
   font-weight: 600;
+  font-size: 0.95rem;
 }
 .product-card .price {
   color: #f59e0b;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
+}
+
+/* Product card image heights */
+.product-card .card-img-top {
+  height: 180px;
+  object-fit: cover;
+}
+
+@media (min-width: 576px) {
+  .product-card .card-img-top {
+    height: 200px;
+  }
+  .product-card .card-title {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .product-card .card-img-top {
+    height: 220px;
+  }
+  .product-card .card-title {
+    font-size: 1.05rem;
+  }
 }
 
 /* ===== Category Cards ===== */
@@ -203,6 +313,7 @@ form label {
   color: #ddd;
   text-decoration: none;
   transition: color 0.2s;
+  font-size: 0.95rem;
 }
 .footer-link:hover {
   color: #f59e0b; /* gold */
@@ -210,6 +321,29 @@ form label {
 }
 .text-gold {
   color: #f59e0b !important;
+}
+
+/* Footer responsive */
+@media (max-width: 576px) {
+  .footer-custom {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  .footer-link {
+    font-size: 0.9rem;
+  }
+}
+
+/* btn-outline-gold styling */
+.btn-outline-gold {
+  border: 1px solid #f59e0b;
+  color: #f59e0b !important;
+  transition: all 0.2s;
+}
+.btn-outline-gold:hover {
+  background-color: #f59e0b;
+  color: #4c1d95 !important;
+  border-color: #f59e0b;
 }
 
 /* Social Icons */
@@ -223,19 +357,47 @@ form label {
 }
 
 /* ===== Newsletter Section ===== */
-#newsletter-form input[type="email"] {
-  max-width: 300px;
-  border-radius: 0.5rem 0 0 0.5rem;
+#newsletter-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
+
+#newsletter-form input[type="email"] {
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
 #newsletter-form button {
-  border-radius: 0 0.5rem 0.5rem 0;
+  border-radius: 0.5rem;
   background-color: #f59e0b; /* gold */
   border: none;
   font-weight: 600;
+  width: 100%;
 }
+
 #newsletter-form button:hover {
   background-color: #d97706; /* darker gold */
   color: #fff;
+}
+
+@media (min-width: 576px) {
+  #newsletter-form {
+    flex-direction: row;
+    gap: 0;
+  }
+  
+  #newsletter-form input[type="email"] {
+    border-radius: 0.5rem 0 0 0.5rem;
+    width: auto;
+    flex: 1;
+  }
+  
+  #newsletter-form button {
+    border-radius: 0 0.5rem 0.5rem 0;
+    width: auto;
+    min-width: 120px;
+  }
 }
 
 /* ===== WhatsApp Floating Button ===== */
@@ -245,17 +407,31 @@ form label {
   right: 20px;
   background: #25d366; /* WhatsApp green */
   color: white;
-  font-size: 2rem;
+  font-size: 1.5rem;
   border-radius: 50%;
-  padding: 12px 14px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  z-index: 1000;
+  z-index: 999;
   animation: pulse 2s infinite;
   transition: transform 0.2s ease-in-out;
 }
+
 .whatsapp-float:hover {
   transform: scale(1.1);
   color: white;
+}
+
+/* Prevent overlap with other fixed elements */
+@media (max-width: 576px) {
+  .whatsapp-float {
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.25rem;
+  }
 }
 
 /* Pulse effect */
@@ -276,6 +452,8 @@ form label {
   color: #4c1d95 !important;           /* purple text/icon */
   font-weight: 600;
   border: none;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
 }
 .btn-cart:hover {
   background-color: #d97706 !important; /* darker gold */
@@ -296,7 +474,15 @@ form label {
   border: none;
   border-radius: 0.75rem;
   padding: 1rem;
-  min-width: 320px;
+  min-width: 280px;
+  max-width: 350px;
+}
+
+@media (max-width: 576px) {
+  #navbarCart + .dropdown-menu {
+    min-width: 250px;
+    padding: 0.75rem;
+  }
 }
 
 #navbarCart + .dropdown-menu li {
@@ -432,4 +618,56 @@ form label {
 /* ===== Utility Enhancements ===== */
 .text-muted {
   color: #6b7280 !important; /* Tailwind gray-500 */
+}
+
+/* ===== Responsive Container Padding ===== */
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 576px) {
+  .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* ===== Responsive Sections ===== */
+section {
+  padding: 2rem 0 !important;
+}
+
+@media (min-width: 576px) {
+  section {
+    padding: 3rem 0 !important;
+  }
+}
+
+@media (min-width: 992px) {
+  section {
+    padding: 5rem 0 !important;
+  }
+}
+
+/* ===== Responsive Text Utilities ===== */
+@media (max-width: 576px) {
+  h1 { font-size: 1.75rem !important; }
+  h2 { font-size: 1.5rem !important; }
+  h3 { font-size: 1.25rem !important; }
+  h4 { font-size: 1.1rem !important; }
+  h5 { font-size: 1rem !important; }
+  h6 { font-size: 0.95rem !important; }
+}
+
+/* ===== Responsive Button Sizes ===== */
+@media (max-width: 576px) {
+  .btn {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+  }
+  .btn-lg {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+  }
 }

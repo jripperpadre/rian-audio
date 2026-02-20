@@ -47,6 +47,10 @@ class Category(TimeStamped):
 
     class Meta:
         ordering = ["name"]
+        indexes = [
+            models.Index(fields=['slug']),
+            models.Index(fields=['name']),
+        ]
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -102,6 +106,13 @@ class Product(TimeStamped):
 
     class Meta:
         ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=['slug']),
+            models.Index(fields=['category', '-created_at']),
+            models.Index(fields=['featured', '-created_at']),
+            models.Index(fields=['-price']),
+            models.Index(fields=['created_at']),
+        ]
 
     def save(self, *args, **kwargs):
         if not self.slug:

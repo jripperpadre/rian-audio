@@ -115,20 +115,23 @@ class ProductAdmin(admin.ModelAdmin):
         "thumbnail", "name", "category", "price_display", "watts",
         "stock", "badge_colored", "featured", "created_at"
     )
-    list_filter = ("featured", "category", "badge_type", "created_at")
-    search_fields = ("name", "description")
+    list_filter = ("featured", "category", "badge_type", "created_at", "stock")
+    search_fields = ("name", "description", "slug")
     inlines = [ProductImageInline]
     ordering = ("-created_at",)
     list_editable = ("featured", "stock")
     date_hierarchy = "created_at"
+    list_select_related = ("category",)
+    readonly_fields = ("slug", "created_at", "updated_at", "thumbnail")
 
     fieldsets = (
         ("Basic Info", {"fields": (
             "name", "slug", "category", "description", "main_image",
-            "featured", "badge_type"
+            "thumbnail", "featured", "badge_type"
         )}),
         ("Pricing & Stock", {"fields": ("price", "old_price", "stock", "watts")}),
         ("Contact", {"fields": ("whatsapp_number",)}),
+        ("Metadata", {"fields": ("created_at", "updated_at")}),
     )
 
     actions = [
@@ -165,8 +168,10 @@ class ProductAdmin(admin.ModelAdmin):
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ("product", "user", "rating", "created_at")
     search_fields = ("product__name", "user__username", "text")
-    list_filter = ("rating", "created_at")
+    list_filter = ("rating", "created_at", "product__category")
     date_hierarchy = "created_at"
+    list_select_related = ("product", "user")
+    readonly_fields = ("created_at", "updated_at")
 
 
 class OrderItemInline(admin.TabularInline):
@@ -182,8 +187,9 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [OrderItemInline]
     ordering = ("-created_at",)
     list_editable = ("total",)
-    readonly_fields = ("total",)
+    readonly_fields = ("total", "created_at", "updated_at")
     date_hierarchy = "created_at"
+    list_select_related = ("user", "address")
 
     actions = [
         "mark_processing", "mark_sent", "mark_done",
@@ -239,8 +245,11 @@ class OrderAdmin(admin.ModelAdmin):
 class AddressAdmin(admin.ModelAdmin):
     list_display = ("user", "full_name", "phone", "city", "created_at")
     search_fields = ("user__username", "full_name", "phone", "city")
+    list_filter = ("created_at", "city")
     ordering = ("-created_at",)
     date_hierarchy = "created_at"
+    list_select_related = ("user",)
+    readonly_fields = ("created_at", "updated_at")
 
     actions = [
         export_as_csv_action("Export selected customers to CSV",
@@ -254,8 +263,10 @@ class AddressAdmin(admin.ModelAdmin):
 class TestimonialAdmin(admin.ModelAdmin):
     list_display = ("name", "created_at")
     search_fields = ("name", "message")
+    list_filter = ("created_at",)
     ordering = ("-created_at",)
     date_hierarchy = "created_at"
+    readonly_fields = ("created_at", "updated_at")
 
 @admin.register(NewsletterSubscription)
 class NewsletterSubscriptionAdmin(admin.ModelAdmin):
@@ -292,8 +303,10 @@ class NewsletterSubscriptionAdmin(admin.ModelAdmin):
 class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ("name", "email", "subject", "created_at")
     search_fields = ("name", "email", "subject", "message")
+    list_filter = ("created_at",)
     ordering = ("-created_at",)
     date_hierarchy = "created_at"
+    readonly_fields = ("created_at", "updated_at")
 
 
 @admin.register(SiteConfig)

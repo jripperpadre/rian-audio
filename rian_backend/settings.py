@@ -195,8 +195,49 @@ CSRF_TRUSTED_ORIGINS = os.getenv(
 ).split(",")
 
 SECURE_SSL_REDIRECT = not DEBUG
+SECURE_HSTS_SECONDS = 31536000 if not DEBUG else 0  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+# Content Security Policy
+SECURE_CONTENT_SECURITY_POLICY = {
+    "default-src": ("'self'",),
+    "script-src": (
+        "'self'",
+        "cdn.jsdelivr.net",
+        "code.jquery.com",
+    ),
+    "style-src": (
+        "'self'",
+        "'unsafe-inline'",
+        "cdn.jsdelivr.net",
+        "fonts.googleapis.com",
+    ),
+    "font-src": (
+        "'self'",
+        "fonts.gstatic.com",
+        "cdn.jsdelivr.net",
+    ),
+    "img-src": (
+        "'self'",
+        "data:",
+        "res.cloudinary.com",
+        "https:",
+    ),
+    "media-src": ("'self'",),
+    "connect-src": (
+        "'self'",
+        "res.cloudinary.com",
+        "fonts.googleapis.com",
+    ),
+    "frame-ancestors": ("'none'",),
+}
 
 # ------------------------------
 # Default PK type

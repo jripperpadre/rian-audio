@@ -5,7 +5,10 @@
 <html lang="{{ LANGUAGE_CODE|default:'en' }}">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <title>{% block title %}Rian Audio Sounds{% endblock %}</title>
 
@@ -62,6 +65,7 @@
 
   <!-- Custom CSS -->
   <link href="{% static 'shop/css/public.css' %}" rel="stylesheet">
+  <link href="{% static 'shop/css/responsive.css' %}" rel="stylesheet">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="{% static 'shop/img/favicon.png' %}">

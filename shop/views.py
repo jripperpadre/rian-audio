@@ -1,30 +1,24 @@
-from django.views.decorators.http import require_POST
+# Django imports
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
-from django.db.models import Q
-from django.contrib import messages
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import TestimonialForm
-from django.views.decorators.http import require_POST
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
-from .models import NewsletterSubscription
-from django import forms
-from django.shortcuts import render
-from django.conf import settings
-
-
 from django.contrib.auth.views import (
     LoginView, LogoutView, PasswordResetView, PasswordResetConfirmView
 )
+from django.contrib import messages
+from django.db.models import Q
+from django.conf import settings
+from django.urls import reverse_lazy
+from django.urls import reverse
 from django.views.generic import CreateView
+from django import forms
 
-# Forms
+# Local imports - Forms
 from .forms import (
+    TestimonialForm,
     CustomUserCreationForm, CustomAuthenticationForm,
     CustomPasswordResetForm, CustomSetPasswordForm,
 )
@@ -107,7 +101,7 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 # -------------------------------------------------------------------
 
 def home(request):
-    featured_products = Product.objects.filter(featured=True)[:6]
+    featured_products = Product.objects.filter(featured=True).select_related("category").prefetch_related("images")[:6]
     categories = Category.objects.all()
     testimonials = Testimonial.objects.order_by("-created_at")[:4]  # show only 4 latest
     site_config = SiteConfig.objects.first()
@@ -121,19 +115,19 @@ def home(request):
 
 
 def product_list(request):
-    products = Product.objects.all().order_by("-created_at")
+    products = Product.objects.select_related("category").prefetch_related("images").all().order_by("-created_at")
     return render(request, "shop/product_list.html", {"products": products})
 
 
 def product_detail(request, slug):
-    product = get_object_or_404(Product, slug=slug)
+    product = get_object_or_404(Product.objects.prefetch_related("images"), slug=slug)
     reviews = Review.objects.filter(product=product).select_related("user")
     return render(request, "shop/product.html", {"product": product, "reviews": reviews})
 
 
 def category_products(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    products = Product.objects.filter(category=category).order_by("-created_at")
+    products = Product.objects.filter(category=category).select_related("category").prefetch_related("images").order_by("-created_at")
     return render(request, "shop/category_products.html", {
         "category": category,
         "products": products,
@@ -152,14 +146,29 @@ from .cart import Cart
 @require_POST
 def add_to_cart(request, product_id):
     """Add product to cart and redirect back to previous page or cart detail."""
+    from .constants import (
+        DEFAULT_QUANTITY, MAX_QUANTITY, MIN_QUANTITY,
+        SUCCESS_PRODUCT_ADDED, ERROR_INVALID_QUANTITY
+    )
+    
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
 
-    quantity = int(request.POST.get("quantity", 1))
+    # Validate and sanitize quantity
+    try:
+        quantity = int(request.POST.get("quantity", DEFAULT_QUANTITY))
+        if quantity < MIN_QUANTITY or quantity > MAX_QUANTITY:
+            quantity = DEFAULT_QUANTITY
+            messages.warning(request, f"Invalid quantity. Using default quantity of {DEFAULT_QUANTITY}")
+    except (ValueError, TypeError):
+        quantity = DEFAULT_QUANTITY
+        messages.warning(request, ERROR_INVALID_QUANTITY)
+
     override = str(request.POST.get("override", "")).lower() in ["true", "1", "yes"]
 
     cart.add(product=product, quantity=quantity, override_quantity=override)
     request.session.modified = True  # ensure cart persists
+    messages.success(request, SUCCESS_PRODUCT_ADDED)
 
     # ✅ Redirect back to same page (fallback to cart detail)
     return redirect(request.META.get("HTTP_REFERER", reverse("cart_detail")))
@@ -530,3 +539,27 @@ def upload_test(request):
         form = UploadTestForm()
 
     return render(request, "shop/upload_test.html", {"form": form, "url": url})
+
+
+# -------------------------------------------------------------------
+# ERROR HANDLERS
+# -------------------------------------------------------------------
+
+def error_404(request, exception=None):
+    """Handle 404 Not Found errors."""
+    return render(
+        request,
+        "shop/not_found.html",
+        {"requested_url": request.path},
+        status=404
+    )
+
+
+def error_500(request):
+    """Handle 500 Internal Server errors."""
+    return render(request, "shop/500.html", status=500)
+
+
+def error_403(request, exception=None):
+    """Handle 403 Forbidden errors."""
+    return render(request, "shop/403.html", status=403)
