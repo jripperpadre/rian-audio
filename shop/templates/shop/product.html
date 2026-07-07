@@ -13,23 +13,20 @@
         <img id="main-image"
              src="{{ product.main_image.url }}"
              alt="{{ product.name }}"
-             class="img-fluid rounded shadow-sm w-100"
-             style="object-fit: cover; max-height: 400px;">
+             class="img-fluid rounded shadow-sm w-100 main-image">
       </div>
 
       {% if product.images.all %}
       <div class="d-flex flex-nowrap gap-2 mt-3 overflow-auto pb-2">
         <!-- Main Image Thumbnail -->
         <img src="{{ product.main_image.url }}" alt="Main thumbnail"
-             class="img-thumbnail shadow-sm active-thumb"
-             style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+             class="img-thumbnail shadow-sm active-thumb thumbnail-img"
              onclick="setMainImage(this)">
         
         <!-- Gallery Thumbnails -->
         {% for image in product.images.all %}
           <img src="{{ image.image.url }}" alt="thumbnail"
-               class="img-thumbnail shadow-sm"
-               style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+               class="img-thumbnail shadow-sm thumbnail-img"
                onclick="setMainImage(this)">
         {% endfor %}
       </div>
@@ -53,7 +50,7 @@
         <p class="mb-4">{{ product.description }}</p>
 
         <!-- ✅ Add to Cart Form -->
-        <form method="post" action="{% url 'add_to_cart' product.id %}" class="d-flex align-items-center gap-3">
+        <form method="post" action="{% url 'add_to_cart' product.id %}" class="d-flex flex-wrap align-items-center gap-3">
           {% csrf_token %}
           <input 
             id="quantity"
@@ -61,8 +58,8 @@
             type="number"
             value="1"
             min="1"
-            class="form-control text-center border-purple fw-semibold"
-            style="width: 90px;">
+            class="form-control text-center border-purple fw-semibold w-auto"
+            style="min-width: 90px;">
           
           <button type="submit"
                   class="btn btn-shop px-4 fw-semibold d-flex align-items-center gap-2">

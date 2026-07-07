@@ -20,12 +20,10 @@
               <!-- Avatar -->
               {% if t.avatar %}
                 <img src="{{ t.avatar.url }}" alt="{{ t.name }}" 
-                     class="rounded-circle mx-auto mb-3 border border-light shadow-sm"
-                     style="width: 80px; height: 80px; object-fit: cover;">
+                     class="rounded-circle mx-auto mb-3 border border-light shadow-sm testimonial-avatar">
               {% else %}
-                <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold shadow-sm 
-                     {% cycle 'bg-dark text-white' 'bg-dark text-white' 'bg-dark text-white' 'bg-light text-dark' %}"
-                     style="width: 80px; height: 80px; font-size: 1.25rem;">
+                <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold shadow-sm testimonial-avatar testimonial-avatar-fallback 
+                     {% cycle 'bg-dark text-white' 'bg-dark text-white' 'bg-dark text-white' 'bg-light text-dark' %}">
                   {{ t.name|first|upper }}
                 </div>
               {% endif %}

@@ -40,15 +40,15 @@
   </form>
 
   <!-- Search Results -->
-  {% if products %}
+  {% if page_obj.object_list %}
     <h5 class="mb-3">
-      Found {{ products.count }} product{{ products.count|pluralize }}
+      Found {{ page_obj.paginator.count }} product{{ page_obj.paginator.count|pluralize }}
       {% if query %} for "<strong>{{ query }}</strong>"{% endif %}
       {% if selected_category %} in <strong>{{ selected_category }}</strong>{% endif %}
     </h5>
 
     <div class="row">
-      {% for product in products %}
+      {% for product in page_obj.object_list %}
         <div class="col-md-4 mb-4">
           <div class="card h-100 shadow-sm">
             {% if product.images.first %}
@@ -69,6 +69,34 @@
         </div>
       {% endfor %}
     </div>
+
+    {% if is_paginated %}
+      <nav aria-label="Search results pagination" class="mt-4">
+        <ul class="pagination justify-content-center flex-wrap">
+          {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?q={{ query }}&category={{ selected_category }}&page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Previous</span></li>
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+              <a class="page-link" href="?q={{ query }}&category={{ selected_category }}&page={{ num }}">{{ num }}</a>
+            </li>
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?q={{ query }}&category={{ selected_category }}&page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Next</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
   {% else %}
     <div class="alert alert-warning text-center">
       No products found{% if query %} for "<strong>{{ query }}</strong>"{% endif %}.

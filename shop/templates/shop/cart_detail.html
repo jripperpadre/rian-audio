@@ -24,8 +24,7 @@
           <td class="d-flex align-items-center">
             {% if item.product.image %}
               <img src="{{ item.product.image.url }}"
-                   class="rounded me-3 shadow-sm"
-                   style="width: 60px; height: 60px; object-fit: cover;"
+                   class="rounded me-3 shadow-sm cart-item-img"
                    alt="{{ item.product.name }}">
             {% endif %}
             <div>
@@ -48,8 +47,7 @@
               {% csrf_token %}
               <input type="number"
                      name="quantity"
-                     class="form-control text-center d-inline-block"
-                     style="width: 70px;"
+                     class="form-control text-center d-inline-block cart-qty-input"
                      min="1"
                      value="{{ item.quantity }}"
                      aria-label="Update {{ item.product.name }} quantity">

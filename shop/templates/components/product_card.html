@@ -11,11 +11,9 @@
     {% if product.images.first %}
       <img src="{{ product.images.first.image.url }}" 
            alt="{{ product.name }}" 
-           class="card-img-top rounded-top-4 product-img" 
-           style="height:220px; object-fit:cover;" loading="lazy">
+           class="card-img-top rounded-top-4 product-img" loading="lazy">
     {% else %}
-      <div class="bg-light d-flex align-items-center justify-content-center rounded-top-4" 
-           style="height:220px;">
+      <div class="bg-light d-flex align-items-center justify-content-center rounded-top-4 product-img">
         <i class="bi bi-speaker fs-1 text-muted"></i>
       </div>
     {% endif %}

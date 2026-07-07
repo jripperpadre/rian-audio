@@ -474,15 +474,22 @@ form label {
   border: none;
   border-radius: 0.75rem;
   padding: 1rem;
-  min-width: 280px;
-  max-width: 350px;
+  width: auto;
+  min-width: 200px;
+  max-width: 90vw;
 }
 
 @media (max-width: 576px) {
   #navbarCart + .dropdown-menu {
-    min-width: 250px;
+    min-width: 90vw !important;
+    max-width: 90vw !important;
+    width: auto !important;
     padding: 0.75rem;
   }
+}
+
+#navbarCart + .dropdown-menu .text-nowrap {
+  white-space: normal !important;
 }
 
 #navbarCart + .dropdown-menu li {

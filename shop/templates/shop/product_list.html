@@ -48,11 +48,9 @@
             <img src="{{ product.main_image.url }}" 
                  alt="{{ product.name }} - {{ product.category.name }}"
                  loading="lazy"
-                 class="card-img-top rounded-top"
-                 style="height: 200px; object-fit: cover;">
+                 class="card-img-top rounded-top product-grid-img">
           {% else %}
-            <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-top" 
-                 style="height: 200px;">
+            <div class="d-flex align-items-center justify-content-center bg-light text-muted rounded-top product-grid-img">
               No Image
             </div>
           {% endif %}
@@ -102,6 +100,34 @@
   </div>
   {% else %}
     <p class="text-center text-muted">No products available at the moment.</p>
+  {% endif %}
+
+  {% if is_paginated %}
+    <nav aria-label="Product list pagination" class="mt-4">
+      <ul class="pagination justify-content-center flex-wrap">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+            <a class="page-link" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ num }}">{{ num }}</a>
+          </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?{% if request.GET.category %}category={{ request.GET.category }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}{% if request.GET.q %}q={{ request.GET.q }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+      </ul>
+    </nav>
   {% endif %}
 </div>
 

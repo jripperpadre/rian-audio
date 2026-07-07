@@ -38,9 +38,9 @@
               <a href="{% url 'product_detail' product.slug %}">
                 {% if product.main_image %}
                   <img src="{{ product.main_image.url }}" alt="{{ product.name }}"
-                       class="card-img-top" style="height:200px; object-fit:cover;">
+                       class="card-img-top featured-img">
                 {% else %}
-                  <div class="bg-light d-flex align-items-center justify-content-center" style="height:200px;">
+                  <div class="bg-light d-flex align-items-center justify-content-center featured-img">
                     <i class="bi bi-box-seam fs-1 text-muted"></i>
                   </div>
                 {% endif %}
@@ -101,10 +101,9 @@
             <div class="card shadow-sm border-0 h-100 text-center hover-shadow product-card">
               {% if category.image %}
                 <img src="{{ category.image.url }}" alt="{{ category.name }}" 
-                     class="card-img-top" style="height:180px; object-fit:cover;" loading="lazy">
+                     class="card-img-top category-img" loading="lazy">
               {% else %}
-                <div class="bg-purple d-flex align-items-center justify-content-center" 
-                     style="height:180px;">
+                <div class="bg-purple d-flex align-items-center justify-content-center category-img">
                   <i class="bi bi-speaker fs-1 text-white"></i>
                 </div>
               {% endif %}

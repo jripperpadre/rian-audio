@@ -22,6 +22,8 @@ from .forms import (
     CustomUserCreationForm, CustomAuthenticationForm,
     CustomPasswordResetForm, CustomSetPasswordForm,
 )
+from .constants import PRODUCTS_PER_PAGE
+from django.core.paginator import Paginator
 
 # Models
 from .models import (
@@ -115,8 +117,17 @@ def home(request):
 
 
 def product_list(request):
-    products = Product.objects.select_related("category").prefetch_related("images").all().order_by("-created_at")
-    return render(request, "shop/product_list.html", {"products": products})
+    products_qs = Product.objects.select_related("category").prefetch_related("images").all().order_by("-created_at")
+    paginator = Paginator(products_qs, PRODUCTS_PER_PAGE)
+    page_number = request.GET.get("page")
+    products = paginator.get_page(page_number)
+
+    return render(request, "shop/product_list.html", {
+        "products": products,
+        "page_obj": products,
+        "paginator": paginator,
+        "is_paginated": products.has_other_pages(),
+    })
 
 
 def product_detail(request, slug):
@@ -127,20 +138,22 @@ def product_detail(request, slug):
 
 def category_products(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    products = Product.objects.filter(category=category).select_related("category").prefetch_related("images").order_by("-created_at")
+    products_qs = Product.objects.filter(category=category).select_related("category").prefetch_related("images").order_by("-created_at")
+    paginator = Paginator(products_qs, PRODUCTS_PER_PAGE)
+    page_number = request.GET.get("page")
+    products = paginator.get_page(page_number)
+
     return render(request, "shop/category_products.html", {
         "category": category,
         "products": products,
+        "page_obj": products,
+        "paginator": paginator,
+        "is_paginated": products.has_other_pages(),
     })
 
 
 def contact(request):
     return render(request, "shop/contact.html")
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_POST
-from django.urls import reverse
-from .models import Product
-from .cart import Cart
 
 
 @require_POST
@@ -319,17 +332,21 @@ def order_detail(request, pk):
 def search_products(request):
     query = request.GET.get("q", "")
     category_slug = request.GET.get("category", "")
-    products = Product.objects.all()
+    products_qs = Product.objects.all()
 
     if query:
-        products = products.filter(
+        products_qs = products_qs.filter(
             Q(name__icontains=query) | 
             Q(description__icontains=query) | 
             Q(category__name__icontains=query)
         )
 
     if category_slug:
-        products = products.filter(category__slug=category_slug)
+        products_qs = products_qs.filter(category__slug=category_slug)
+
+    paginator = Paginator(products_qs, PRODUCTS_PER_PAGE)
+    page_number = request.GET.get("page")
+    products = paginator.get_page(page_number)
 
     categories = Category.objects.all()
 
@@ -338,6 +355,9 @@ def search_products(request):
         "query": query,
         "categories": categories,
         "selected_category": category_slug,
+        "page_obj": products,
+        "paginator": paginator,
+        "is_paginated": products.has_other_pages(),
     })
 
 
