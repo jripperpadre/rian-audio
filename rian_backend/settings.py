@@ -19,7 +19,7 @@ DEBUG = os.getenv("DEBUG", "1") == "1"
 
 ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS",
-    "localhost,127.0.0.1,rian-audio.onrender.com,rian-audio-immv.vercel.app"
+    "localhost,127.0.0.1,rian-audio.onrender.com,rian-audio-immv.vercel.app,.vercel.app"
 ).split(",")
 
 # ------------------------------
@@ -191,7 +191,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 
 CSRF_TRUSTED_ORIGINS = os.getenv(
     "CSRF_TRUSTED_ORIGINS",
-    "http://localhost,http://127.0.0.1,https://rian-audio.onrender.com,https://rian-audio-immv.vercel.app"
+    "http://localhost,http://127.0.0.1,https://rian-audio.onrender.com,https://rian-audio-immv.vercel.app,https://*.vercel.app"
 ).split(",")
 
 SECURE_SSL_REDIRECT = not DEBUG
