@@ -103,13 +103,36 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 # -------------------------------------------------------------------
 
 def home(request):
-    featured_products = Product.objects.filter(featured=True).select_related("category").prefetch_related("images")[:6]
+    # Try featured first; fall back to latest products so the page is never empty
+    featured_products = list(
+        Product.objects.filter(featured=True)
+        .select_related("category")
+        .prefetch_related("images")[:8]
+    )
+    if not featured_products:
+        featured_products = list(
+            Product.objects.all()
+            .select_related("category")
+            .prefetch_related("images")
+            .order_by("-created_at")[:8]
+        )
+
+    # Latest products for the "New Arrivals" strip (exclude those already in featured)
+    featured_ids = [p.id for p in featured_products]
+    latest_products = list(
+        Product.objects.exclude(id__in=featured_ids)
+        .select_related("category")
+        .prefetch_related("images")
+        .order_by("-created_at")[:4]
+    )
+
     categories = Category.objects.all()
-    testimonials = Testimonial.objects.order_by("-created_at")[:4]  # show only 4 latest
+    testimonials = Testimonial.objects.order_by("-created_at")[:4]
     site_config = SiteConfig.objects.first()
 
     return render(request, "shop/home.html", {
         "featured_products": featured_products,
+        "latest_products": latest_products,
         "categories": categories,
         "testimonials": testimonials,
         "site_config": site_config,
