@@ -1,76 +1,109 @@
-<footer class="footer-custom text-light py-4 py-md-5 mt-5">
+<footer class="footer-custom text-light pt-5 pb-3 mt-5">
   <div class="container">
-    <div class="row gy-4">
-      
-      <!-- Brand -->
-      <div class="col-12 col-md-4 text-center text-md-start">
-        <h4 class="fw-bold text-gold mb-2">Rian Audio Sounds</h4>
-        <p class="small mb-0">&copy; {% now "Y" %} Rian Audio Sounds. All rights reserved.</p>
+    <div class="row gy-4 mb-4">
+
+      <!-- Brand + tagline -->
+      <div class="col-12 col-md-4">
+        <h4 class="fw-bold text-gold mb-2">
+          <i class="bi bi-speaker-fill me-2"></i>Rian Audio Sounds
+        </h4>
+        <p class="small opacity-75 mb-3">
+          Nairobi's home for premium car audio systems, custom Jua builds, amplifiers and more.
+        </p>
+        <!-- Social icons -->
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="https://www.facebook.com/profile.php?id=61561903380922"
+             class="social-link" aria-label="Facebook" target="_blank" rel="noopener">
+            <i class="bi bi-facebook fs-5"></i>
+          </a>
+          <a href="#" class="social-link" aria-label="Instagram">
+            <i class="bi bi-instagram fs-5"></i>
+          </a>
+          <a href="https://www.tiktok.com/@rian.audio.sound"
+             class="social-link" aria-label="TikTok" target="_blank" rel="noopener">
+            <i class="bi bi-tiktok fs-5"></i>
+          </a>
+          <a href="https://wa.me/254768873350"
+             class="social-link" aria-label="WhatsApp" target="_blank" rel="noopener">
+            <i class="bi bi-whatsapp fs-5"></i>
+          </a>
+        </div>
       </div>
 
       <!-- Quick Links -->
-      <div class="col-12 col-md-4 text-center text-md-start">
-        <h5 class="fw-semibold mb-3 text-gold">Quick Links</h5>
-        <ul class="list-unstyled">
+      <div class="col-6 col-md-2">
+        <h6 class="fw-bold text-gold mb-3 text-uppercase" style="font-size:.75rem;letter-spacing:.06em;">
+          Quick Links
+        </h6>
+        <ul class="list-unstyled mb-0" style="line-height:2;">
           <li><a href="{% url 'home' %}" class="footer-link">Home</a></li>
           <li><a href="{% url 'products' %}" class="footer-link">Products</a></li>
           <li><a href="{% url 'contact' %}" class="footer-link">Contact</a></li>
+          <li><a href="{% url 'testimonials' %}" class="footer-link">Reviews</a></li>
         </ul>
       </div>
 
-      <!-- Newsletter & Social -->
-      <div class="col-12 col-md-4 text-center text-md-start">
-        <h5 class="fw-semibold mb-3 text-gold">Stay Connected</h5>
-        
-        <!-- Newsletter -->
-        <form id="newsletter-form" method="post" action="{% url 'subscribe_newsletter' %}">
-          {% csrf_token %}
-          <label for="newsletter-email" class="visually-hidden">Email address</label>
-          <input type="email" id="newsletter-email" name="email"
-                 class="form-control form-control-sm"
-                 placeholder="Your email" required>
-          <button type="submit" class="btn btn-gold btn-sm fw-semibold">Subscribe</button>
-        </form>
-
-        <!-- Social & Contact -->
-        <div class="mt-4">
-          <!-- Social icons -->
-          <div class="d-flex gap-3 justify-content-center justify-content-md-start mb-3 flex-wrap">
-            <a href="https://www.facebook.com/profile.php?id=61561903380922" class="social-link" aria-label="Facebook"><i class="bi bi-facebook fs-5"></i></a>
-            <a href="#" class="social-link" aria-label="Instagram"><i class="bi bi-instagram fs-5"></i></a>
-            <a href="#" class="social-link" aria-label="Twitter"><i class="bi bi-twitter fs-5"></i></a>
-            {% if site_config.whatsapp_number %}
-              <a href="https://wa.me/{{ site_config.whatsapp_number|default:'+254768873350' }}" 
-                 target="_blank" class="social-link" aria-label="WhatsApp"><i class="bi bi-whatsapp fs-5"></i></a>
-            {% endif %}
-            <a href="https://www.tiktok.com/@rian.audio.sound" class="social-link" aria-label="TikTok"><i class="bi bi-tiktok fs-5"></i></a>
-          </div>
-
-          <!-- Call & Email buttons -->
-          <div class="d-flex flex-column gap-2 align-items-center align-items-md-start">
-            {% if site_config.whatsapp_number %}
-              <a href="tel:{{ site_config.whatsapp_number }}"
-                 class="btn btn-outline-gold btn-sm d-inline-flex align-items-center gap-2">
-                <i class="bi bi-telephone"></i> Call Us
-              </a>
-            {% endif %}
-            {% if site_config.support_email %}
-              <a href="mailto:{{ site_config.support_email }}"
-                 class="btn btn-outline-gold btn-sm d-inline-flex align-items-center gap-2">
-                <i class="bi bi-envelope"></i> Email Us
-              </a>
-            {% endif %}
-          </div>
-        </div>
+      <!-- Account -->
+      <div class="col-6 col-md-2">
+        <h6 class="fw-bold text-gold mb-3 text-uppercase" style="font-size:.75rem;letter-spacing:.06em;">
+          Account
+        </h6>
+        <ul class="list-unstyled mb-0" style="line-height:2;">
+          <li><a href="{% url 'login' %}" class="footer-link">Login</a></li>
+          <li><a href="{% url 'signup' %}" class="footer-link">Register</a></li>
+          <li><a href="{% url 'my_orders' %}" class="footer-link">My Orders</a></li>
+          <li><a href="{% url 'cart_detail' %}" class="footer-link">My Cart</a></li>
+        </ul>
       </div>
+
+      <!-- Contact -->
+      <div class="col-12 col-md-4">
+        <h6 class="fw-bold text-gold mb-3 text-uppercase" style="font-size:.75rem;letter-spacing:.06em;">
+          Get In Touch
+        </h6>
+        <ul class="list-unstyled mb-0" style="line-height:2.2;">
+          <li>
+            <a href="https://wa.me/254768873350" target="_blank" rel="noopener"
+               class="footer-link d-inline-flex align-items-center gap-2">
+              <i class="bi bi-whatsapp text-gold"></i> +254 768 873 350
+            </a>
+          </li>
+          {% if site_config.support_email %}
+          <li>
+            <a href="mailto:{{ site_config.support_email }}"
+               class="footer-link d-inline-flex align-items-center gap-2">
+              <i class="bi bi-envelope text-gold"></i> {{ site_config.support_email }}
+            </a>
+          </li>
+          {% endif %}
+          <li class="d-flex align-items-center gap-2 opacity-75 small">
+            <i class="bi bi-geo-alt text-gold"></i> Nairobi, Kenya
+          </li>
+        </ul>
+        <a href="https://wa.me/254768873350" target="_blank" rel="noopener"
+           class="btn btn-success btn-sm mt-3 fw-semibold">
+          <i class="bi bi-whatsapp me-1"></i> Chat on WhatsApp
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="border-top pt-3 d-flex flex-wrap justify-content-between align-items-center gap-2"
+         style="border-color:rgba(255,255,255,.12)!important;">
+      <p class="mb-0 small opacity-60">
+        &copy; {% now "Y" %} Rian Audio Sounds. All rights reserved.
+      </p>
+      <p class="mb-0 small opacity-60">
+        Built with <i class="bi bi-heart-fill text-gold" style="font-size:.7rem;"></i> in Nairobi
+      </p>
     </div>
   </div>
 </footer>
 
-<!-- Floating WhatsApp Bubble -->
-{% if site_config.whatsapp_number %}
-<a href="https://wa.me/254768873350" 
-   target="_blank" class="whatsapp-float" aria-label="Chat on WhatsApp">
+<!-- Floating WhatsApp bubble -->
+<a href="https://wa.me/254768873350"
+   target="_blank" rel="noopener"
+   class="whatsapp-float" aria-label="Chat on WhatsApp">
   <i class="bi bi-whatsapp"></i>
 </a>
-{% endif %}
