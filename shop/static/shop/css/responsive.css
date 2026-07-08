@@ -12,6 +12,7 @@
 html {
   box-sizing: border-box;
   min-width: 0;
+  overflow-x: hidden;
 }
 *, *::before, *::after {
   box-sizing: inherit;
