@@ -342,7 +342,6 @@
    BACKDROP
 ═══════════════════════════════════════ */
 .ms-backdrop {
-  display: none;
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,.55);
@@ -350,11 +349,12 @@
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   opacity: 0;
+  pointer-events: none;          /* invisible AND unclickable when closed */
   transition: opacity .3s ease;
 }
 .ms-backdrop.show {
-  display: block;
   opacity: 1;
+  pointer-events: all;           /* only intercept clicks when open */
 }
 
 /* ═══════════════════════════════════════
@@ -581,9 +581,6 @@
   .ni-brand i    { display: none; }
   .ni-search { max-width: none; flex: 1 1 80px; min-width: 60px; }
   .ni-wrap { padding: 0 12px; gap: 8px; }
-
-  /* Sheet only shows on mobile */
-  .ms-sheet, .ms-backdrop { display: block; }
 }
 @media (min-width: 768px) {
   .ms-sheet    { display: none !important; }
