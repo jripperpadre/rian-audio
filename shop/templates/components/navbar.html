@@ -1,370 +1,396 @@
 {% load nav_extras %}
 
 <nav id="mainNav" class="sticky-top">
-  <div class="nav-top-bar">
-    <div class="container d-flex align-items-center" style="gap:12px; height:56px;">
+  <div class="container nav-inner">
 
-      <!-- Brand -->
-      <a class="nav-brand" href="{% url 'home' %}">Rian Audio Sounds</a>
+    <!-- ① Brand -->
+    <a class="nav-brand" href="{% url 'home' %}">
+      <i class="bi bi-speaker-fill me-1" style="font-size:.9em;"></i>Rian Audio Sounds
+    </a>
 
-      <!-- Search — always visible, grows to fill space -->
+    <!-- ② Page links — centre, desktop only -->
+    <ul class="nav-links" id="navLinks">
+      <li><a class="nav-lnk {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
+             href="{% url 'home' %}">Home</a></li>
+      <li><a class="nav-lnk {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
+             href="{% url 'products' %}">Products</a></li>
+      <li><a class="nav-lnk {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
+             href="{% url 'contact' %}">Contact</a></li>
+    </ul>
+
+    <!-- ③ Right side — always visible -->
+    <div class="nav-right">
+
+      <!-- Search -->
       <form class="nav-search" method="get" action="{% url 'search_products' %}" role="search">
-        <input type="search" name="q" placeholder="Search products…"
-               value="{{ request.GET.q|default:'' }}" aria-label="Search">
-        <button type="submit" aria-label="Submit search">
+        <input type="search" name="q" placeholder="Search…"
+               value="{{ request.GET.q|default:'' }}" aria-label="Search products">
+        <button type="submit" aria-label="Search">
           <i class="bi bi-search"></i>
         </button>
       </form>
 
-      <!-- Right icons — always visible -->
-      <div class="nav-right-icons">
+      <!-- Cart -->
+      <a href="{% url 'cart_detail' %}" class="nav-cart" aria-label="Cart">
+        <i class="bi bi-cart3"></i>
+        {% if cart|length > 0 %}
+          <span class="nav-cart-badge">{{ cart|length }}</span>
+        {% endif %}
+      </a>
 
-        <!-- Cart (single icon, always shown) -->
-        <a href="{% url 'cart_detail' %}" class="nav-cart-icon" aria-label="Cart">
-          <i class="bi bi-cart3"></i>
-          {% if cart|length > 0 %}
-            <span class="nav-cart-badge">{{ cart|length }}</span>
-          {% endif %}
-        </a>
-
-        <!-- Auth buttons — desktop only -->
-        <div class="nav-auth-desktop">
-          {% if user.is_authenticated %}
-            <span class="nav-username">Hi, {{ user.username }}</span>
-            <form action="{% url 'logout' %}" method="post" style="display:inline;">
-              {% csrf_token %}
-              <button type="submit" class="nav-btn nav-btn-danger">Logout</button>
-            </form>
-          {% else %}
-            <a href="{% url 'login' %}" class="nav-btn nav-btn-success">Login</a>
-            <a href="{% url 'signup' %}" class="nav-btn nav-btn-red">Register</a>
-          {% endif %}
-        </div>
-
-        <!-- Hamburger — mobile only -->
-        <button class="nav-hamburger" id="navToggler" aria-label="Open menu"
-                aria-expanded="false" aria-controls="navDrawer">
-          <i class="bi bi-list" id="navHamIcon"></i>
-        </button>
-
+      <!-- Auth — desktop only -->
+      <div class="nav-auth">
+        {% if user.is_authenticated %}
+          <span class="nav-hi">Hi, {{ user.username }}</span>
+          <form action="{% url 'logout' %}" method="post" style="margin:0;">
+            {% csrf_token %}
+            <button type="submit" class="nbtn nbtn-red">Logout</button>
+          </form>
+        {% else %}
+          <a href="{% url 'login' %}"  class="nbtn nbtn-green">Login</a>
+          <a href="{% url 'signup' %}" class="nbtn nbtn-gold">Register</a>
+        {% endif %}
       </div>
-    </div>
-  </div>
 
-  <!-- Nav links row — desktop -->
-  <div class="nav-links-bar d-none d-md-block">
-    <div class="container d-flex align-items-center" style="gap:4px;">
-      <a class="nav-page-link {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
-         href="{% url 'home' %}">Home</a>
-      <a class="nav-page-link {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
-         href="{% url 'products' %}">Products</a>
-      <a class="nav-page-link {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
-         href="{% url 'contact' %}">Contact</a>
+      <!-- Hamburger — mobile only -->
+      <button class="nav-ham" id="navHam" aria-label="Menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
     </div>
   </div>
 
   <!-- Mobile drawer -->
-  <div class="nav-drawer" id="navDrawer">
-    <a class="nav-drawer-link {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
-       href="{% url 'home' %}"><i class="bi bi-house me-2"></i>Home</a>
-    <a class="nav-drawer-link {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
-       href="{% url 'products' %}"><i class="bi bi-grid me-2"></i>Products</a>
-    <a class="nav-drawer-link {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
-       href="{% url 'contact' %}"><i class="bi bi-envelope me-2"></i>Contact</a>
+  <div class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <a class="drw-link {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
+       href="{% url 'home' %}"><i class="bi bi-house-fill"></i> Home</a>
+    <a class="drw-link {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
+       href="{% url 'products' %}"><i class="bi bi-grid-fill"></i> Products</a>
+    <a class="drw-link {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
+       href="{% url 'contact' %}"><i class="bi bi-envelope-fill"></i> Contact</a>
 
-    <div class="nav-drawer-divider"></div>
+    <div class="drw-divider"></div>
 
     {% if user.is_authenticated %}
-      <span class="nav-drawer-user"><i class="bi bi-person-circle me-2"></i>{{ user.username }}</span>
-      <form action="{% url 'logout' %}" method="post">
+      <p class="drw-user"><i class="bi bi-person-circle"></i> {{ user.username }}</p>
+      <form action="{% url 'logout' %}" method="post" style="margin:0;">
         {% csrf_token %}
-        <button type="submit" class="nav-btn nav-btn-danger w-100 mt-1">
-          <i class="bi bi-box-arrow-right me-1"></i>Logout
+        <button type="submit" class="nbtn nbtn-red drw-full">
+          <i class="bi bi-box-arrow-right"></i> Logout
         </button>
       </form>
     {% else %}
-      <a href="{% url 'login' %}" class="nav-btn nav-btn-success w-100">
-        <i class="bi bi-box-arrow-in-right me-1"></i>Login
+      <a href="{% url 'login' %}"  class="nbtn nbtn-green drw-full">
+        <i class="bi bi-box-arrow-in-right"></i> Login
       </a>
-      <a href="{% url 'signup' %}" class="nav-btn nav-btn-red w-100 mt-2">
-        <i class="bi bi-person-plus me-1"></i>Register
+      <a href="{% url 'signup' %}" class="nbtn nbtn-gold drw-full" style="margin-top:8px;">
+        <i class="bi bi-person-plus-fill"></i> Register
       </a>
     {% endif %}
   </div>
-
 </nav>
 
 <style>
-/* ─────────────────────────────────────
-   NAV VARIABLES
-───────────────────────────────────── */
-:root {
-  --nav-bg: #4c1d95;
-  --nav-gold: #f59e0b;
-  --nav-gold-dark: #d97706;
-  --nav-text: rgba(255,255,255,.88);
-  --nav-border: rgba(255,255,255,.1);
-}
-
-/* ─────────────────────────────────────
-   WRAPPER
-───────────────────────────────────── */
+/* ══════════════════════════════════════
+   NAVBAR — single source of truth
+══════════════════════════════════════ */
 #mainNav {
+  background: #4c1d95;
+  box-shadow: 0 2px 16px rgba(0,0,0,.35);
   position: sticky;
   top: 0;
-  z-index: 1030;
-  box-shadow: 0 2px 12px rgba(0,0,0,.3);
+  z-index: 1040;
+  font-family: 'Inter','Segoe UI',sans-serif;
 }
 
-/* ─────────────────────────────────────
-   TOP BAR (brand + search + icons)
-───────────────────────────────────── */
-.nav-top-bar {
-  background: var(--nav-bg);
+.nav-inner {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  gap: 0;
 }
 
+/* ① Brand */
 .nav-brand {
-  color: var(--nav-gold);
+  color: #f59e0b;
   font-weight: 700;
   font-size: 1.1rem;
   text-decoration: none;
   white-space: nowrap;
+  margin-right: 24px;
   flex-shrink: 0;
+  transition: color .2s;
 }
 .nav-brand:hover { color: #fff; }
 
+/* ② Page links */
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.nav-lnk {
+  color: rgba(255,255,255,.8);
+  text-decoration: none;
+  font-size: .9rem;
+  font-weight: 500;
+  padding: .38rem .7rem;
+  border-radius: 6px;
+  transition: color .18s, background .18s;
+  white-space: nowrap;
+}
+.nav-lnk:hover { color: #f59e0b; background: rgba(255,255,255,.08); }
+.nav-lnk.active { color: #f59e0b; background: rgba(245,158,11,.12); }
+
+/* ③ Right section */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
 /* Search */
 .nav-search {
-  flex: 1;
   display: flex;
-  gap: 4px;
-  min-width: 0;
+  align-items: center;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color .2s, background .2s;
+  width: 200px;
+}
+.nav-search:focus-within {
+  background: rgba(255,255,255,.16);
+  border-color: #f59e0b;
 }
 .nav-search input {
   flex: 1;
   min-width: 0;
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.2);
-  border-radius: 6px;
-  color: #fff;
-  padding: .35rem .75rem;
-  font-size: .88rem;
-  outline: none;
-  transition: background .2s, border-color .2s;
-}
-.nav-search input::placeholder { color: rgba(255,255,255,.5); }
-.nav-search input:focus {
-  background: rgba(255,255,255,.18);
-  border-color: var(--nav-gold);
-}
-.nav-search button {
-  background: var(--nav-gold);
+  background: transparent;
   border: none;
-  border-radius: 6px;
-  color: #4c1d95;
-  padding: .35rem .7rem;
-  font-size: .9rem;
+  outline: none;
+  color: #fff;
+  font-size: .85rem;
+  padding: .38rem .7rem;
+}
+.nav-search input::placeholder { color: rgba(255,255,255,.45); }
+.nav-search button {
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(255,255,255,.15);
+  color: #f59e0b;
+  padding: .38rem .65rem;
   cursor: pointer;
-  flex-shrink: 0;
-  transition: background .2s;
-}
-.nav-search button:hover { background: var(--nav-gold-dark); color: #fff; }
-
-/* Right icons group */
-.nav-right-icons {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  font-size: .9rem;
+  transition: color .2s;
   flex-shrink: 0;
 }
+.nav-search button:hover { color: #fff; }
 
-/* Cart icon */
-.nav-cart-icon {
+/* Cart */
+.nav-cart {
   position: relative;
-  color: var(--nav-gold);
-  font-size: 1.4rem;
+  color: #f59e0b;
+  font-size: 1.45rem;
   text-decoration: none;
   line-height: 1;
   display: flex;
   align-items: center;
+  transition: color .2s;
+  flex-shrink: 0;
 }
-.nav-cart-icon:hover { color: #fff; }
+.nav-cart:hover { color: #fff; }
 .nav-cart-badge {
   position: absolute;
-  top: -5px;
-  right: -7px;
-  background: #dc2626;
+  top: -6px; right: -8px;
+  background: #ef4444;
   color: #fff;
-  font-size: .55rem;
+  font-size: .56rem;
   font-weight: 700;
+  line-height: 1;
   border-radius: 999px;
-  padding: .1em .38em;
-  min-width: 1.25em;
+  padding: .15em .42em;
+  min-width: 1.3em;
   text-align: center;
-  line-height: 1.5;
+  border: 1.5px solid #4c1d95;
 }
 
-/* Desktop auth buttons group */
-.nav-auth-desktop {
+/* Auth */
+.nav-auth {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.nav-username {
-  color: rgba(255,255,255,.6);
+.nav-hi {
+  color: rgba(255,255,255,.55);
   font-size: .8rem;
   white-space: nowrap;
 }
 
-/* Shared button style */
-.nav-btn {
+/* Buttons */
+.nbtn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 5px;
   border: none;
-  border-radius: 6px;
-  padding: .32rem .85rem;
+  border-radius: 7px;
+  padding: .36rem .9rem;
   font-size: .82rem;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: opacity .2s, filter .2s;
   white-space: nowrap;
+  transition: filter .18s, opacity .18s;
+  line-height: 1.4;
 }
-.nav-btn:hover { opacity: .88; filter: brightness(1.05); }
-.nav-btn-success { background: #16a34a; color: #fff; }
-.nav-btn-red     { background: #dc2626; color: #fff; }
-.nav-btn-danger  { background: #dc2626; color: #fff; }
+.nbtn:hover { filter: brightness(1.1); opacity: .92; }
+.nbtn-green { background: #16a34a; color: #fff; }
+.nbtn-gold  { background: #f59e0b; color: #1e1040; }
+.nbtn-red   { background: #dc2626; color: #fff; }
 
 /* Hamburger */
-.nav-hamburger {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 1.65rem;
-  line-height: 1;
-  padding: 0;
-  cursor: pointer;
-  display: none;           /* hidden on desktop */
-  align-items: center;
-}
-.nav-hamburger:focus { outline: none; }
-.nav-hamburger:hover { color: var(--nav-gold); }
-
-/* ─────────────────────────────────────
-   DESKTOP LINKS BAR (second row)
-───────────────────────────────────── */
-.nav-links-bar {
-  background: rgba(0,0,0,.15);
-  border-top: 1px solid var(--nav-border);
-  padding: .25rem 0;
-}
-.nav-page-link {
-  color: var(--nav-text);
-  text-decoration: none;
-  font-size: .9rem;
-  font-weight: 500;
-  padding: .3rem .75rem;
-  border-radius: 5px;
-  transition: color .2s, background .2s;
-}
-.nav-page-link:hover,
-.nav-page-link.active {
-  color: var(--nav-gold);
-  background: rgba(255,255,255,.08);
-}
-
-/* ─────────────────────────────────────
-   MOBILE DRAWER
-───────────────────────────────────── */
-.nav-drawer {
+.nav-ham {
   display: none;
   flex-direction: column;
-  background: #3b1072;
-  padding: .75rem 1rem 1rem;
-  border-top: 1px solid var(--nav-border);
-  gap: 2px;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  padding: 6px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 7px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .2s;
 }
-.nav-drawer.open { display: flex; }
+.nav-ham:hover { background: rgba(255,255,255,.15); }
+.nav-ham:focus { outline: none; }
+.nav-ham span {
+  display: block;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform .25s, opacity .25s, width .25s;
+  width: 100%;
+}
+/* X state */
+.nav-ham.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-ham.is-open span:nth-child(2) { opacity: 0; width: 0; }
+.nav-ham.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-.nav-drawer-link {
-  color: var(--nav-text);
+/* ══════════════════════════════════════
+   MOBILE DRAWER
+══════════════════════════════════════ */
+.nav-drawer {
+  background: #3a1580;
+  border-top: 1px solid rgba(255,255,255,.1);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .3s ease, padding .3s ease;
+  padding: 0 1rem;
+}
+.nav-drawer.open {
+  max-height: 420px;
+  padding: .75rem 1rem 1.25rem;
+}
+
+.drw-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,.85);
   text-decoration: none;
   font-size: .95rem;
   font-weight: 500;
-  padding: .55rem .75rem;
-  border-radius: 6px;
+  padding: .6rem .75rem;
+  border-radius: 7px;
   transition: background .15s, color .15s;
 }
-.nav-drawer-link:hover,
-.nav-drawer-link.active {
+.drw-link:hover, .drw-link.active {
   background: rgba(255,255,255,.1);
-  color: var(--nav-gold);
+  color: #f59e0b;
 }
-
-.nav-drawer-divider {
+.drw-divider {
   height: 1px;
-  background: var(--nav-border);
-  margin: .5rem 0;
+  background: rgba(255,255,255,.1);
+  margin: .6rem 0;
 }
-
-.nav-drawer-user {
-  color: rgba(255,255,255,.55);
+.drw-user {
+  color: rgba(255,255,255,.5);
   font-size: .83rem;
-  padding: .3rem .75rem;
+  padding: .25rem .75rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.drw-full {
+  width: 100%;
+  justify-content: center;
+  padding: .55rem;
+  font-size: .9rem;
 }
 
-/* ─────────────────────────────────────
-   MOBILE BREAKPOINT
-───────────────────────────────────── */
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
 @media (max-width: 767.98px) {
-  .nav-hamburger    { display: flex; }
-  .nav-auth-desktop { display: none; }
-  /* Shrink brand text slightly on small phones */
-  .nav-brand { font-size: .97rem; }
+  .nav-links  { display: none; }
+  .nav-auth   { display: none; }
+  .nav-ham    { display: flex; }
+  .nav-brand  { font-size: 1rem; margin-right: 10px; }
+  .nav-search { width: auto; flex: 1; min-width: 0; }
+}
+
+@media (max-width: 400px) {
+  .nav-brand { font-size: .88rem; }
 }
 </style>
 
 <script>
 (function () {
-  var btn    = document.getElementById('navToggler');
+  var ham    = document.getElementById('navHam');
   var drawer = document.getElementById('navDrawer');
   var nav    = document.getElementById('mainNav');
-  var icon   = document.getElementById('navHamIcon');
-  if (!btn) return;
+  if (!ham) return;
 
-  function openDrawer() {
-    drawer.classList.add('open');
-    btn.setAttribute('aria-expanded', 'true');
-    icon.className = 'bi bi-x-lg';
-  }
-
-  function closeDrawer() {
+  function close() {
     drawer.classList.remove('open');
-    btn.setAttribute('aria-expanded', 'false');
-    icon.className = 'bi bi-list';
+    ham.classList.remove('is-open');
+    ham.setAttribute('aria-expanded', 'false');
+    drawer.setAttribute('aria-hidden', 'true');
+  }
+  function open() {
+    drawer.classList.add('open');
+    ham.classList.add('is-open');
+    ham.setAttribute('aria-expanded', 'true');
+    drawer.setAttribute('aria-hidden', 'false');
   }
 
-  btn.addEventListener('click', function (e) {
+  ham.addEventListener('click', function (e) {
     e.stopPropagation();
-    drawer.classList.contains('open') ? closeDrawer() : openDrawer();
+    drawer.classList.contains('open') ? close() : open();
   });
 
-  // Close when clicking anywhere outside the navbar
+  /* click outside → close */
   document.addEventListener('click', function (e) {
-    if (drawer.classList.contains('open') && !nav.contains(e.target)) {
-      closeDrawer();
-    }
+    if (drawer.classList.contains('open') && !nav.contains(e.target)) close();
   });
 
-  // Close when pressing Escape
+  /* escape → close */
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeDrawer();
+    if (e.key === 'Escape') close();
   });
 
-  // Close when a drawer link is tapped (navigating away)
-  drawer.querySelectorAll('.nav-drawer-link').forEach(function (link) {
-    link.addEventListener('click', closeDrawer);
+  /* tap a link → close */
+  drawer.querySelectorAll('.drw-link').forEach(function (l) {
+    l.addEventListener('click', close);
   });
 })();
 </script>
