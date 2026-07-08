@@ -1,140 +1,139 @@
 {% load nav_extras %}
 
-<nav id="mainNav" class="sticky-top">
-  <div class="container nav-inner">
+<nav id="mainNav">
+  <div class="ni-wrap">
 
-    <!-- ① Brand -->
-    <a class="nav-brand" href="{% url 'home' %}">
-      <i class="bi bi-speaker-fill me-1" style="font-size:.9em;"></i>Rian Audio Sounds
+    <!-- Brand -->
+    <a class="ni-brand" href="{% url 'home' %}">
+      <i class="bi bi-speaker-fill"></i>
+      <span>Rian Audio Sounds</span>
     </a>
 
-    <!-- ② Page links — centre, desktop only -->
-    <ul class="nav-links" id="navLinks">
-      <li><a class="nav-lnk {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
+    <!-- Desktop nav links (hidden on mobile) -->
+    <ul class="ni-links">
+      <li><a class="ni-lnk {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
              href="{% url 'home' %}">Home</a></li>
-      <li><a class="nav-lnk {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
+      <li><a class="ni-lnk {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
              href="{% url 'products' %}">Products</a></li>
-      <li><a class="nav-lnk {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
+      <li><a class="ni-lnk {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
              href="{% url 'contact' %}">Contact</a></li>
     </ul>
 
-    <!-- ③ Right side — always visible -->
-    <div class="nav-right">
+    <!-- Search bar -->
+    <form class="ni-search" method="get" action="{% url 'search_products' %}" role="search">
+      <input type="search" name="q" placeholder="Search…"
+             value="{{ request.GET.q|default:'' }}" aria-label="Search">
+      <button type="submit" aria-label="Search"><i class="bi bi-search"></i></button>
+    </form>
 
-      <!-- Search -->
-      <form class="nav-search" method="get" action="{% url 'search_products' %}" role="search">
-        <input type="search" name="q" placeholder="Search…"
-               value="{{ request.GET.q|default:'' }}" aria-label="Search products">
-        <button type="submit" aria-label="Search">
-          <i class="bi bi-search"></i>
-        </button>
-      </form>
+    <!-- Desktop auth (hidden on mobile) -->
+    <div class="ni-auth">
+      {% if user.is_authenticated %}
+        <span class="ni-hi">Hi, {{ user.username }}</span>
+        <form action="{% url 'logout' %}" method="post" style="margin:0">
+          {% csrf_token %}
+          <button type="submit" class="ni-btn ni-btn-red">Logout</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}"  class="ni-btn ni-btn-green">Login</a>
+        <a href="{% url 'signup' %}" class="ni-btn ni-btn-gold">Register</a>
+      {% endif %}
+    </div>
 
-      <!-- Cart -->
-      <a href="{% url 'cart_detail' %}" class="nav-cart" aria-label="Cart">
-        <i class="bi bi-cart3"></i>
-        {% if cart|length > 0 %}
-          <span class="nav-cart-badge">{{ cart|length }}</span>
-        {% endif %}
-      </a>
+    <!-- Cart — ALWAYS VISIBLE on all screens -->
+    <a href="{% url 'cart_detail' %}" class="ni-cart" aria-label="Cart">
+      <i class="bi bi-cart3"></i>
+      {% if cart|length > 0 %}
+        <span class="ni-cart-badge">{{ cart|length }}</span>
+      {% endif %}
+    </a>
 
-      <!-- Auth — desktop only -->
-      <div class="nav-auth">
-        {% if user.is_authenticated %}
-          <span class="nav-hi">Hi, {{ user.username }}</span>
-          <form action="{% url 'logout' %}" method="post" style="margin:0;">
-            {% csrf_token %}
-            <button type="submit" class="nbtn nbtn-red">Logout</button>
-          </form>
-        {% else %}
-          <a href="{% url 'login' %}"  class="nbtn nbtn-green">Login</a>
-          <a href="{% url 'signup' %}" class="nbtn nbtn-gold">Register</a>
-        {% endif %}
-      </div>
+    <!-- Hamburger — mobile only, ALWAYS VISIBLE on small screens -->
+    <button class="ni-ham" id="niHam" aria-label="Menu" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
 
-      <!-- Hamburger — mobile only -->
-      <button class="nav-ham" id="navHam" aria-label="Menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+  </div><!-- /ni-wrap -->
 
+  <!-- Mobile drawer -->
+  <div class="ni-drawer" id="niDrawer" aria-hidden="true">
+    <div class="ni-drawer-inner">
+      <a class="ni-drw {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
+         href="{% url 'home' %}"><i class="bi bi-house-fill"></i> Home</a>
+      <a class="ni-drw {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
+         href="{% url 'products' %}"><i class="bi bi-grid-fill"></i> Products</a>
+      <a class="ni-drw {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
+         href="{% url 'contact' %}"><i class="bi bi-envelope-fill"></i> Contact</a>
+
+      <div class="ni-drw-divider"></div>
+
+      {% if user.is_authenticated %}
+        <p class="ni-drw-user"><i class="bi bi-person-circle"></i> {{ user.username }}</p>
+        <form action="{% url 'logout' %}" method="post" style="margin:0">
+          {% csrf_token %}
+          <button type="submit" class="ni-btn ni-btn-red ni-drw-full">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}"  class="ni-btn ni-btn-green ni-drw-full">
+          <i class="bi bi-box-arrow-in-right"></i> Login
+        </a>
+        <a href="{% url 'signup' %}" class="ni-btn ni-btn-gold ni-drw-full" style="margin-top:8px">
+          <i class="bi bi-person-plus-fill"></i> Register
+        </a>
+      {% endif %}
     </div>
   </div>
 
-  <!-- Mobile drawer -->
-  <div class="nav-drawer" id="navDrawer" aria-hidden="true">
-    <a class="drw-link {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
-       href="{% url 'home' %}"><i class="bi bi-house-fill"></i> Home</a>
-    <a class="drw-link {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
-       href="{% url 'products' %}"><i class="bi bi-grid-fill"></i> Products</a>
-    <a class="drw-link {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
-       href="{% url 'contact' %}"><i class="bi bi-envelope-fill"></i> Contact</a>
-
-    <div class="drw-divider"></div>
-
-    {% if user.is_authenticated %}
-      <p class="drw-user"><i class="bi bi-person-circle"></i> {{ user.username }}</p>
-      <form action="{% url 'logout' %}" method="post" style="margin:0;">
-        {% csrf_token %}
-        <button type="submit" class="nbtn nbtn-red drw-full">
-          <i class="bi bi-box-arrow-right"></i> Logout
-        </button>
-      </form>
-    {% else %}
-      <a href="{% url 'login' %}"  class="nbtn nbtn-green drw-full">
-        <i class="bi bi-box-arrow-in-right"></i> Login
-      </a>
-      <a href="{% url 'signup' %}" class="nbtn nbtn-gold drw-full" style="margin-top:8px;">
-        <i class="bi bi-person-plus-fill"></i> Register
-      </a>
-    {% endif %}
-  </div>
 </nav>
 
 <style>
-/* ══════════════════════════════════════
-   NAVBAR — single source of truth
-══════════════════════════════════════ */
+/* ===========================================
+   RESET & BASE
+=========================================== */
 #mainNav {
   background: #4c1d95;
-  box-shadow: 0 2px 16px rgba(0,0,0,.35);
   position: sticky;
   top: 0;
   z-index: 1040;
+  box-shadow: 0 2px 12px rgba(0,0,0,.35);
   font-family: 'Inter','Segoe UI',sans-serif;
-  /* prevent ANY child from causing horizontal scroll */
-  max-width: 100vw;
-  overflow-x: hidden;
 }
 
-.nav-inner {
+/* Wrapper: single flex row, never wraps */
+.ni-wrap {
   display: flex;
   align-items: center;
-  height: 60px;
-  gap: 0;
-  /* never let children push past the container */
-  min-width: 0;
-  overflow: hidden;
+  height: 58px;
+  padding: 0 16px;
+  gap: 10px;
+  /* Critical: do NOT use overflow:hidden here — it clips the cart badge */
 }
 
-/* ① Brand */
-.nav-brand {
+/* ===========================================
+   BRAND
+=========================================== */
+.ni-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: #f59e0b;
   font-weight: 700;
   font-size: 1.05rem;
   text-decoration: none;
   white-space: nowrap;
-  margin-right: 16px;
   flex-shrink: 0;
-  /* hard cap so it never overflows on tiny phones */
-  max-width: 48vw;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: color .2s;
 }
-.nav-brand:hover { color: #fff; }
+.ni-brand:hover { color: #fff; }
+.ni-brand i { font-size: .9rem; }
 
-/* ② Page links */
-.nav-links {
+/* ===========================================
+   DESKTOP NAV LINKS
+=========================================== */
+.ni-links {
   display: flex;
   list-style: none;
   margin: 0;
@@ -142,47 +141,36 @@
   gap: 2px;
   flex-shrink: 0;
 }
-.nav-lnk {
+.ni-lnk {
   color: rgba(255,255,255,.8);
   text-decoration: none;
   font-size: .9rem;
   font-weight: 500;
-  padding: .38rem .7rem;
+  padding: .35rem .65rem;
   border-radius: 6px;
-  transition: color .18s, background .18s;
   white-space: nowrap;
+  transition: color .15s, background .15s;
 }
-.nav-lnk:hover { color: #f59e0b; background: rgba(255,255,255,.08); }
-.nav-lnk.active { color: #f59e0b; background: rgba(245,158,11,.12); }
+.ni-lnk:hover,
+.ni-lnk.active { color: #f59e0b; background: rgba(255,255,255,.1); }
 
-/* ③ Right section */
-.nav-right {
+/* ===========================================
+   SEARCH
+=========================================== */
+.ni-search {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-left: auto;
+  flex: 1;               /* fills available space */
   min-width: 0;
-  flex-shrink: 0;
-}
-
-/* Search */
-.nav-search {
-  display: flex;
-  align-items: center;
+  max-width: 260px;      /* cap on desktop so it doesn't go huge */
   background: rgba(255,255,255,.1);
-  border: 1px solid rgba(255,255,255,.18);
-  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 7px;
   overflow: hidden;
-  transition: border-color .2s, background .2s;
-  width: 200px;
-  flex-shrink: 1;
-  min-width: 0;
+  transition: border-color .2s;
 }
-.nav-search:focus-within {
-  background: rgba(255,255,255,.16);
-  border-color: #f59e0b;
-}
-.nav-search input {
+.ni-search:focus-within { border-color: #f59e0b; }
+.ni-search input {
   flex: 1;
   min-width: 0;
   background: transparent;
@@ -192,134 +180,141 @@
   font-size: .85rem;
   padding: .38rem .7rem;
 }
-.nav-search input::placeholder { color: rgba(255,255,255,.45); }
-.nav-search button {
+.ni-search input::placeholder { color: rgba(255,255,255,.4); }
+.ni-search button {
   background: transparent;
   border: none;
   border-left: 1px solid rgba(255,255,255,.15);
   color: #f59e0b;
-  padding: .38rem .65rem;
+  padding: .38rem .6rem;
   cursor: pointer;
-  font-size: .9rem;
-  transition: color .2s;
+  font-size: .88rem;
   flex-shrink: 0;
 }
-.nav-search button:hover { color: #fff; }
+.ni-search button:hover { color: #fff; }
 
-/* Cart */
-.nav-cart {
-  position: relative;
-  color: #f59e0b;
-  font-size: 1.45rem;
-  text-decoration: none;
-  line-height: 1;
+/* ===========================================
+   DESKTOP AUTH
+=========================================== */
+.ni-auth {
   display: flex;
   align-items: center;
-  transition: color .2s;
+  gap: 7px;
   flex-shrink: 0;
 }
-.nav-cart:hover { color: #fff; }
-.nav-cart-badge {
-  position: absolute;
-  top: -6px; right: -8px;
-  background: #ef4444;
-  color: #fff;
-  font-size: .56rem;
-  font-weight: 700;
-  line-height: 1;
-  border-radius: 999px;
-  padding: .15em .42em;
-  min-width: 1.3em;
-  text-align: center;
-  border: 1.5px solid #4c1d95;
-}
-
-/* Auth */
-.nav-auth {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-.nav-hi {
-  color: rgba(255,255,255,.55);
-  font-size: .8rem;
+.ni-hi {
+  color: rgba(255,255,255,.5);
+  font-size: .78rem;
   white-space: nowrap;
 }
 
-/* Buttons */
-.nbtn {
+/* Shared button */
+.ni-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
   border: none;
   border-radius: 7px;
-  padding: .36rem .9rem;
-  font-size: .82rem;
+  padding: .34rem .85rem;
+  font-size: .8rem;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
   white-space: nowrap;
-  transition: filter .18s, opacity .18s;
+  transition: filter .15s;
   line-height: 1.4;
 }
-.nbtn:hover { filter: brightness(1.1); opacity: .92; }
-.nbtn-green { background: #16a34a; color: #fff; }
-.nbtn-gold  { background: #f59e0b; color: #1e1040; }
-.nbtn-red   { background: #dc2626; color: #fff; }
+.ni-btn:hover { filter: brightness(1.12); }
+.ni-btn-green { background: #16a34a; color: #fff; }
+.ni-btn-gold  { background: #f59e0b; color: #2d0d6b; }
+.ni-btn-red   { background: #dc2626; color: #fff; }
 
-/* Hamburger */
-.nav-ham {
-  display: none;
+/* ===========================================
+   CART ICON  — flex-shrink:0 keeps it visible
+=========================================== */
+.ni-cart {
+  position: relative;
+  color: #f59e0b;
+  font-size: 1.4rem;
+  line-height: 1;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;        /* NEVER squish or hide this */
+  transition: color .2s;
+}
+.ni-cart:hover { color: #fff; }
+.ni-cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #ef4444;
+  color: #fff;
+  font-size: .52rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: .12em .4em;
+  min-width: 1.25em;
+  text-align: center;
+  line-height: 1.5;
+  border: 1.5px solid #4c1d95;
+}
+
+/* ===========================================
+   HAMBURGER  — flex-shrink:0 keeps it visible
+=========================================== */
+.ni-ham {
+  display: none;          /* shown via media query below */
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 5px;
-  width: 36px;
-  height: 36px;
-  padding: 6px;
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.15);
+  width: 38px;
+  height: 38px;
+  padding: 7px;
+  background: rgba(255,255,255,.1);
+  border: 1.5px solid rgba(255,255,255,.22);
   border-radius: 7px;
   cursor: pointer;
-  flex-shrink: 0;
+  flex-shrink: 0;         /* NEVER squish or hide this */
   transition: background .2s;
 }
-.nav-ham:hover { background: rgba(255,255,255,.15); }
-.nav-ham:focus { outline: none; }
-.nav-ham span {
+.ni-ham:hover  { background: rgba(255,255,255,.18); }
+.ni-ham:focus  { outline: none; }
+.ni-ham span {
   display: block;
+  width: 18px;
   height: 2px;
   background: #fff;
   border-radius: 2px;
-  transition: transform .25s, opacity .25s, width .25s;
-  width: 100%;
+  transition: transform .25s, opacity .25s;
 }
-/* X state */
-.nav-ham.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.nav-ham.is-open span:nth-child(2) { opacity: 0; width: 0; }
-.nav-ham.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+/* animated X when open */
+.ni-ham.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.ni-ham.open span:nth-child(2) { opacity: 0; }
+.ni-ham.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* ══════════════════════════════════════
+/* ===========================================
    MOBILE DRAWER
-══════════════════════════════════════ */
-.nav-drawer {
-  background: #3a1580;
+=========================================== */
+.ni-drawer {
+  background: #3b1578;
   border-top: 1px solid rgba(255,255,255,.1);
   max-height: 0;
   overflow: hidden;
-  transition: max-height .3s ease, padding .3s ease;
-  padding: 0 1rem;
-  /* drawer must never overflow the viewport */
-  width: 100%;
-  max-width: 100vw;
-  box-sizing: border-box;
+  transition: max-height .3s ease;
 }
-.nav-drawer.open {
-  max-height: 480px;
+.ni-drawer.open { max-height: 500px; }
+
+.ni-drawer-inner {
   padding: .75rem 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
-.drw-link {
+.ni-drw {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -330,26 +325,26 @@
   padding: .6rem .75rem;
   border-radius: 7px;
   transition: background .15s, color .15s;
+  margin: 1px 0;
 }
-.drw-link:hover, .drw-link.active {
-  background: rgba(255,255,255,.1);
-  color: #f59e0b;
-}
-.drw-divider {
+.ni-drw:hover,
+.ni-drw.active { background: rgba(255,255,255,.1); color: #f59e0b; }
+
+.ni-drw-divider {
   height: 1px;
   background: rgba(255,255,255,.1);
-  margin: .6rem 0;
+  margin: .5rem 0;
 }
-.drw-user {
-  color: rgba(255,255,255,.5);
-  font-size: .83rem;
-  padding: .25rem .75rem;
-  margin: 0;
+.ni-drw-user {
+  color: rgba(255,255,255,.45);
+  font-size: .82rem;
+  margin: 0 0 4px;
+  padding: .2rem .75rem;
   display: flex;
   align-items: center;
   gap: 7px;
 }
-.drw-full {
+.ni-drw-full {
   width: 100%;
   justify-content: center;
   padding: .55rem;
@@ -357,64 +352,74 @@
   box-sizing: border-box;
 }
 
-/* ══════════════════════════════════════
-   RESPONSIVE
-══════════════════════════════════════ */
+/* ===========================================
+   RESPONSIVE BREAKPOINTS
+=========================================== */
+
+/* ── Tablet / large mobile: hide desktop nav ── */
 @media (max-width: 767.98px) {
-  .nav-links  { display: none; }
-  .nav-auth   { display: none; }
-  .nav-ham    { display: flex; }
-  .nav-brand  { font-size: .95rem; margin-right: 8px; max-width: 38vw; }
-  /* search fills the available space between brand and [cart + ham] */
-  .nav-search { width: auto; flex: 1 1 auto; min-width: 0; max-width: none; }
-  .nav-right  { gap: 8px; }
+  .ni-links { display: none; }
+  .ni-auth  { display: none; }
+  .ni-ham   { display: flex; }
+
+  /* Brand: shrinks text but never disappears */
+  .ni-brand span { font-size: .92rem; }
+  .ni-brand i    { display: none; }  /* hide icon on mobile to save space */
+
+  /* Search: takes remaining space but has a sensible min */
+  .ni-search { max-width: none; flex: 1 1 80px; min-width: 60px; }
+
+  /* Tighten padding */
+  .ni-wrap { padding: 0 12px; gap: 8px; }
 }
 
+/* ── Very small phones (≤360px) ── */
 @media (max-width: 360px) {
-  .nav-brand { font-size: .82rem; max-width: 34vw; }
-  .nav-search input { font-size: .78rem; padding: .3rem .5rem; }
-  .nav-search button { padding: .3rem .5rem; }
+  .ni-brand span { font-size: .8rem; }
+  .ni-search input { font-size: .78rem; padding: .3rem .45rem; }
+  .ni-search button { padding: .3rem .45rem; }
+  .ni-wrap { padding: 0 8px; gap: 6px; }
 }
 </style>
 
 <script>
 (function () {
-  var ham    = document.getElementById('navHam');
-  var drawer = document.getElementById('navDrawer');
+  var ham    = document.getElementById('niHam');
+  var drawer = document.getElementById('niDrawer');
   var nav    = document.getElementById('mainNav');
-  if (!ham) return;
+  if (!ham || !drawer) return;
 
-  function close() {
-    drawer.classList.remove('open');
-    ham.classList.remove('is-open');
-    ham.setAttribute('aria-expanded', 'false');
-    drawer.setAttribute('aria-hidden', 'true');
-  }
-  function open() {
+  function openMenu() {
     drawer.classList.add('open');
-    ham.classList.add('is-open');
+    ham.classList.add('open');
     ham.setAttribute('aria-expanded', 'true');
     drawer.setAttribute('aria-hidden', 'false');
+  }
+  function closeMenu() {
+    drawer.classList.remove('open');
+    ham.classList.remove('open');
+    ham.setAttribute('aria-expanded', 'false');
+    drawer.setAttribute('aria-hidden', 'true');
   }
 
   ham.addEventListener('click', function (e) {
     e.stopPropagation();
-    drawer.classList.contains('open') ? close() : open();
+    drawer.classList.contains('open') ? closeMenu() : openMenu();
   });
 
-  /* click outside → close */
+  /* tap outside → close */
   document.addEventListener('click', function (e) {
-    if (drawer.classList.contains('open') && !nav.contains(e.target)) close();
+    if (drawer.classList.contains('open') && !nav.contains(e.target)) closeMenu();
   });
 
-  /* escape → close */
+  /* Escape → close */
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') close();
+    if (e.key === 'Escape') closeMenu();
   });
 
-  /* tap a link → close */
-  drawer.querySelectorAll('.drw-link').forEach(function (l) {
-    l.addEventListener('click', close);
+  /* tap a drawer link → close after navigation */
+  drawer.querySelectorAll('.ni-drw').forEach(function (link) {
+    link.addEventListener('click', closeMenu);
   });
 })();
 </script>
