@@ -1,5 +1,8 @@
 {% load nav_extras %}
 
+<!-- ═══════════════════════════════════════
+     NAVBAR
+═══════════════════════════════════════ -->
 <nav id="mainNav">
   <div class="ni-wrap">
 
@@ -9,7 +12,7 @@
       <span>Rian Audio Sounds</span>
     </a>
 
-    <!-- Desktop nav links (hidden on mobile) -->
+    <!-- Desktop nav links -->
     <ul class="ni-links">
       <li><a class="ni-lnk {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
              href="{% url 'home' %}">Home</a></li>
@@ -19,14 +22,14 @@
              href="{% url 'contact' %}">Contact</a></li>
     </ul>
 
-    <!-- Search bar -->
+    <!-- Search -->
     <form class="ni-search" method="get" action="{% url 'search_products' %}" role="search">
-      <input type="search" name="q" placeholder="Search…"
+      <input type="search" name="q" placeholder="Search products…"
              value="{{ request.GET.q|default:'' }}" aria-label="Search">
       <button type="submit" aria-label="Search"><i class="bi bi-search"></i></button>
     </form>
 
-    <!-- Desktop auth (hidden on mobile) -->
+    <!-- Desktop auth -->
     <div class="ni-auth">
       {% if user.is_authenticated %}
         <span class="ni-hi">Hi, {{ user.username }}</span>
@@ -40,7 +43,7 @@
       {% endif %}
     </div>
 
-    <!-- Cart — ALWAYS VISIBLE on all screens -->
+    <!-- Cart — always visible -->
     <a href="{% url 'cart_detail' %}" class="ni-cart" aria-label="Cart">
       <i class="bi bi-cart3"></i>
       {% if cart|length > 0 %}
@@ -48,74 +51,132 @@
       {% endif %}
     </a>
 
-    <!-- Hamburger — mobile only, ALWAYS VISIBLE on small screens -->
-    <button class="ni-ham" id="niHam" aria-label="Menu" aria-expanded="false">
-      <span></span>
-      <span></span>
-      <span></span>
+    <!-- Hamburger — mobile only -->
+    <button class="ni-ham" id="niHam" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
     </button>
 
-  </div><!-- /ni-wrap -->
-
-  <!-- Mobile drawer -->
-  <div class="ni-drawer" id="niDrawer" aria-hidden="true">
-    <div class="ni-drawer-inner">
-      <a class="ni-drw {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
-         href="{% url 'home' %}"><i class="bi bi-house-fill"></i> Home</a>
-      <a class="ni-drw {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
-         href="{% url 'products' %}"><i class="bi bi-grid-fill"></i> Products</a>
-      <a class="ni-drw {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
-         href="{% url 'contact' %}"><i class="bi bi-envelope-fill"></i> Contact</a>
-
-      <div class="ni-drw-divider"></div>
-
-      {% if user.is_authenticated %}
-        <p class="ni-drw-user"><i class="bi bi-person-circle"></i> {{ user.username }}</p>
-        <form action="{% url 'logout' %}" method="post" style="margin:0">
-          {% csrf_token %}
-          <button type="submit" class="ni-btn ni-btn-red ni-drw-full">
-            <i class="bi bi-box-arrow-right"></i> Logout
-          </button>
-        </form>
-      {% else %}
-        <a href="{% url 'login' %}"  class="ni-btn ni-btn-green ni-drw-full">
-          <i class="bi bi-box-arrow-in-right"></i> Login
-        </a>
-        <a href="{% url 'signup' %}" class="ni-btn ni-btn-gold ni-drw-full" style="margin-top:8px">
-          <i class="bi bi-person-plus-fill"></i> Register
-        </a>
-      {% endif %}
-    </div>
   </div>
-
 </nav>
 
+<!-- ═══════════════════════════════════════
+     MOBILE SIDE SHEET + BACKDROP
+     (lives outside <nav> so it can cover
+      the full viewport)
+═══════════════════════════════════════ -->
+
+<!-- Backdrop — dimmed overlay -->
+<div class="ms-backdrop" id="msBackdrop"></div>
+
+<!-- Side sheet — slides in from the left -->
+<div class="ms-sheet" id="msSheet" aria-hidden="true" role="dialog" aria-label="Navigation menu">
+
+  <!-- Sheet header -->
+  <div class="ms-header">
+    <span class="ms-header-brand">
+      <i class="bi bi-speaker-fill me-2"></i>Rian Audio Sounds
+    </span>
+    <button class="ms-close" id="msClose" aria-label="Close menu">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+
+  <!-- User greeting -->
+  {% if user.is_authenticated %}
+    <div class="ms-user-row">
+      <div class="ms-avatar">{{ user.username|first|upper }}</div>
+      <div>
+        <p class="ms-user-name">{{ user.get_full_name|default:user.username }}</p>
+        <p class="ms-user-sub">{{ user.email }}</p>
+      </div>
+    </div>
+  {% else %}
+    <div class="ms-auth-row">
+      <a href="{% url 'login' %}"  class="ni-btn ni-btn-green ms-auth-btn">
+        <i class="bi bi-box-arrow-in-right"></i> Login
+      </a>
+      <a href="{% url 'signup' %}" class="ni-btn ni-btn-gold ms-auth-btn">
+        <i class="bi bi-person-plus-fill"></i> Register
+      </a>
+    </div>
+  {% endif %}
+
+  <div class="ms-divider"></div>
+
+  <!-- Nav links -->
+  <nav class="ms-nav" aria-label="Mobile navigation">
+    <a class="ms-link {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
+       href="{% url 'home' %}">
+      <span class="ms-link-icon"><i class="bi bi-house-fill"></i></span>
+      Home
+    </a>
+    <a class="ms-link {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
+       href="{% url 'products' %}">
+      <span class="ms-link-icon"><i class="bi bi-grid-fill"></i></span>
+      Products
+    </a>
+    <a class="ms-link {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
+       href="{% url 'contact' %}">
+      <span class="ms-link-icon"><i class="bi bi-envelope-fill"></i></span>
+      Contact
+    </a>
+    <a class="ms-link {% if request.resolver_match.url_name|in_list:'cart_detail' %}active{% endif %}"
+       href="{% url 'cart_detail' %}">
+      <span class="ms-link-icon"><i class="bi bi-cart3"></i></span>
+      Cart
+      {% if cart|length > 0 %}
+        <span class="ms-badge">{{ cart|length }}</span>
+      {% endif %}
+    </a>
+    {% if user.is_authenticated %}
+      <a class="ms-link {% if request.resolver_match.url_name|in_list:'my_orders' %}active{% endif %}"
+         href="{% url 'my_orders' %}">
+        <span class="ms-link-icon"><i class="bi bi-bag-check-fill"></i></span>
+        My Orders
+      </a>
+    {% endif %}
+  </nav>
+
+  <div class="ms-divider"></div>
+
+  <!-- Bottom actions -->
+  {% if user.is_authenticated %}
+    <form action="{% url 'logout' %}" method="post" class="ms-logout">
+      {% csrf_token %}
+      <button type="submit" class="ms-logout-btn">
+        <i class="bi bi-box-arrow-right me-2"></i>Logout
+      </button>
+    </form>
+  {% endif %}
+
+  <a href="https://wa.me/254768873350" target="_blank" rel="noopener" class="ms-whatsapp">
+    <i class="bi bi-whatsapp me-2"></i>Chat on WhatsApp
+  </a>
+
+</div>
+
+
 <style>
-/* ===========================================
-   RESET & BASE
-=========================================== */
+/* ═══════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════ */
 #mainNav {
   background: #4c1d95;
   position: sticky;
   top: 0;
-  z-index: 1040;
+  z-index: 900;
   box-shadow: 0 2px 12px rgba(0,0,0,.35);
   font-family: 'Inter','Segoe UI',sans-serif;
 }
-
-/* Wrapper: single flex row, never wraps */
 .ni-wrap {
   display: flex;
   align-items: center;
   height: 58px;
   padding: 0 16px;
   gap: 10px;
-  /* Critical: do NOT use overflow:hidden here — it clips the cart badge */
 }
 
-/* ===========================================
-   BRAND
-=========================================== */
+/* Brand */
 .ni-brand {
   display: flex;
   align-items: center;
@@ -128,16 +189,13 @@
   flex-shrink: 0;
 }
 .ni-brand:hover { color: #fff; }
-.ni-brand i { font-size: .9rem; }
+.ni-brand i { font-size: .9em; }
 
-/* ===========================================
-   DESKTOP NAV LINKS
-=========================================== */
+/* Desktop links */
 .ni-links {
   display: flex;
   list-style: none;
-  margin: 0;
-  padding: 0;
+  margin: 0; padding: 0;
   gap: 2px;
   flex-shrink: 0;
 }
@@ -154,28 +212,24 @@
 .ni-lnk:hover,
 .ni-lnk.active { color: #f59e0b; background: rgba(255,255,255,.1); }
 
-/* ===========================================
-   SEARCH
-=========================================== */
+/* Search */
 .ni-search {
   display: flex;
   align-items: center;
-  flex: 1;               /* fills available space */
+  flex: 1;
   min-width: 0;
-  max-width: 260px;      /* cap on desktop so it doesn't go huge */
+  max-width: 260px;
   background: #fff;
-  border: 1px solid rgba(255,255,255,.3);
   border-radius: 7px;
   overflow: hidden;
+  border: 2px solid transparent;
   transition: border-color .2s;
 }
 .ni-search:focus-within { border-color: #f59e0b; }
 .ni-search input {
-  flex: 1;
-  min-width: 0;
+  flex: 1; min-width: 0;
   background: transparent;
-  border: none;
-  outline: none;
+  border: none; outline: none;
   color: #333;
   font-size: .85rem;
   padding: .38rem .7rem;
@@ -184,7 +238,6 @@
 .ni-search button {
   background: #f59e0b;
   border: none;
-  border-left: 1px solid #e5e7eb;
   color: #fff;
   padding: .38rem .65rem;
   cursor: pointer;
@@ -194,22 +247,16 @@
 }
 .ni-search button:hover { background: #d97706; }
 
-/* ===========================================
-   DESKTOP AUTH
-=========================================== */
+/* Desktop auth */
 .ni-auth {
   display: flex;
   align-items: center;
   gap: 7px;
   flex-shrink: 0;
 }
-.ni-hi {
-  color: rgba(255,255,255,.5);
-  font-size: .78rem;
-  white-space: nowrap;
-}
+.ni-hi { color: rgba(255,255,255,.5); font-size: .78rem; white-space: nowrap; }
 
-/* Shared button */
+/* Buttons */
 .ni-btn {
   display: inline-flex;
   align-items: center;
@@ -226,14 +273,12 @@
   transition: filter .15s;
   line-height: 1.4;
 }
-.ni-btn:hover { filter: brightness(1.12); }
+.ni-btn:hover { filter: brightness(1.1); color: inherit; }
 .ni-btn-green { background: #16a34a; color: #fff; }
 .ni-btn-gold  { background: #f59e0b; color: #2d0d6b; }
 .ni-btn-red   { background: #dc2626; color: #fff; }
 
-/* ===========================================
-   CART ICON  — flex-shrink:0 keeps it visible
-=========================================== */
+/* Cart */
 .ni-cart {
   position: relative;
   color: #f59e0b;
@@ -242,16 +287,15 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  flex-shrink: 0;        /* NEVER squish or hide this */
+  flex-shrink: 0;
+  padding: 4px;
   transition: color .2s;
-  padding: 4px;          /* gives badge space to sit inside without clipping */
 }
 .ni-cart:hover { color: #fff; }
 .ni-cart-badge {
   position: absolute;
-  top: 0;
-  right: 0;
-  transform: translate(30%, -30%);
+  top: 0; right: 0;
+  transform: translate(25%, -25%);
   background: #ef4444;
   color: #fff;
   font-size: .52rem;
@@ -265,119 +309,286 @@
   pointer-events: none;
 }
 
-/* ===========================================
-   HAMBURGER  — flex-shrink:0 keeps it visible
-=========================================== */
+/* Hamburger */
 .ni-ham {
-  display: none;          /* shown via media query below */
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 5px;
-  width: 38px;
-  height: 38px;
+  width: 38px; height: 38px;
   padding: 7px;
   background: rgba(255,255,255,.1);
   border: 1.5px solid rgba(255,255,255,.22);
   border-radius: 7px;
   cursor: pointer;
-  flex-shrink: 0;         /* NEVER squish or hide this */
+  flex-shrink: 0;
   transition: background .2s;
 }
-.ni-ham:hover  { background: rgba(255,255,255,.18); }
-.ni-ham:focus  { outline: none; }
+.ni-ham:hover { background: rgba(255,255,255,.18); }
+.ni-ham:focus { outline: none; }
 .ni-ham span {
   display: block;
-  width: 18px;
-  height: 2px;
+  width: 18px; height: 2px;
   background: #fff;
   border-radius: 2px;
   transition: transform .25s, opacity .25s;
 }
-/* animated X when open */
 .ni-ham.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
 .ni-ham.open span:nth-child(2) { opacity: 0; }
 .ni-ham.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* ===========================================
-   MOBILE DRAWER
-=========================================== */
-.ni-drawer {
-  background: #3b1578;
-  border-top: 1px solid rgba(255,255,255,.1);
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height .3s ease;
+/* ═══════════════════════════════════════
+   BACKDROP
+═══════════════════════════════════════ */
+.ms-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 1049;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity .3s ease;
 }
-.ni-drawer.open { max-height: 500px; }
+.ms-backdrop.show {
+  display: block;
+  opacity: 1;
+}
 
-.ni-drawer-inner {
-  padding: .75rem 1rem 1.25rem;
+/* ═══════════════════════════════════════
+   SIDE SHEET
+═══════════════════════════════════════ */
+.ms-sheet {
+  position: fixed;
+  top: 0; left: 0;
+  width: min(300px, 85vw);
+  height: 100%;
+  background: #fff;
+  z-index: 1050;
+  transform: translateX(-100%);
+  transition: transform .32s cubic-bezier(.4,0,.2,1);
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  box-shadow: 4px 0 32px rgba(0,0,0,.25);
+}
+.ms-sheet.open {
+  transform: translateX(0);
 }
 
-.ni-drw {
+/* Sheet header */
+.ms-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  color: rgba(255,255,255,.85);
+  justify-content: space-between;
+  padding: 16px 16px 14px;
+  background: #4c1d95;
+  flex-shrink: 0;
+}
+.ms-header-brand {
+  color: #f59e0b;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+}
+.ms-close {
+  background: rgba(255,255,255,.12);
+  border: none;
+  color: #fff;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+.ms-close:hover { background: rgba(255,255,255,.25); }
+.ms-close:focus { outline: none; }
+
+/* User row */
+.ms-user-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f8f5ff;
+  flex-shrink: 0;
+}
+.ms-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: #4c1d95;
+  color: #f59e0b;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ms-user-name {
+  font-weight: 600;
+  color: #1e1b2e;
+  font-size: .9rem;
+  margin: 0;
+  line-height: 1.3;
+}
+.ms-user-sub {
+  color: #888;
+  font-size: .75rem;
+  margin: 0;
+}
+
+/* Auth row (not logged in) */
+.ms-auth-row {
+  display: flex;
+  gap: 8px;
+  padding: 14px 16px;
+  background: #f8f5ff;
+  flex-shrink: 0;
+}
+.ms-auth-btn {
+  flex: 1;
+  padding: .45rem .5rem;
+  font-size: .82rem;
+}
+
+/* Divider */
+.ms-divider {
+  height: 1px;
+  background: #f0eef6;
+  flex-shrink: 0;
+}
+
+/* Nav links */
+.ms-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  flex-shrink: 0;
+}
+.ms-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 20px;
+  color: #2d1f4e;
   text-decoration: none;
   font-size: .95rem;
   font-weight: 500;
-  padding: .6rem .75rem;
-  border-radius: 7px;
   transition: background .15s, color .15s;
-  margin: 1px 0;
+  position: relative;
 }
-.ni-drw:hover,
-.ni-drw.active { background: rgba(255,255,255,.1); color: #f59e0b; }
-
-.ni-drw-divider {
-  height: 1px;
-  background: rgba(255,255,255,.1);
-  margin: .5rem 0;
+.ms-link:hover {
+  background: #f8f5ff;
+  color: #4c1d95;
 }
-.ni-drw-user {
-  color: rgba(255,255,255,.45);
-  font-size: .82rem;
-  margin: 0 0 4px;
-  padding: .2rem .75rem;
+.ms-link.active {
+  background: #f0eaff;
+  color: #4c1d95;
+  font-weight: 600;
+}
+.ms-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: #f59e0b;
+  border-radius: 0 2px 2px 0;
+}
+.ms-link-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: #f0eaff;
+  color: #4c1d95;
   display: flex;
   align-items: center;
-  gap: 7px;
-}
-.ni-drw-full {
-  width: 100%;
   justify-content: center;
-  padding: .55rem;
-  font-size: .9rem;
-  box-sizing: border-box;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: background .15s;
+}
+.ms-link:hover .ms-link-icon,
+.ms-link.active .ms-link-icon {
+  background: #4c1d95;
+  color: #f59e0b;
+}
+.ms-badge {
+  margin-left: auto;
+  background: #ef4444;
+  color: #fff;
+  font-size: .65rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: .15em .55em;
+  min-width: 1.4em;
+  text-align: center;
 }
 
-/* ===========================================
-   RESPONSIVE BREAKPOINTS
-=========================================== */
+/* Logout */
+.ms-logout {
+  padding: 8px 16px 4px;
+  flex-shrink: 0;
+}
+.ms-logout-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 11px 16px;
+  background: #fff0f0;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  color: #dc2626;
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+.ms-logout-btn:hover { background: #fee2e2; }
 
-/* ── Tablet / large mobile: hide desktop nav ── */
+/* WhatsApp */
+.ms-whatsapp {
+  display: flex;
+  align-items: center;
+  margin: 8px 16px 24px;
+  padding: 11px 16px;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  color: #16a34a;
+  font-size: .88rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .15s;
+  flex-shrink: 0;
+}
+.ms-whatsapp:hover { background: #bbf7d0; color: #15803d; }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
 @media (max-width: 767.98px) {
   .ni-links { display: none; }
   .ni-auth  { display: none; }
   .ni-ham   { display: flex; }
-
-  /* Brand: shrinks text but never disappears */
   .ni-brand span { font-size: .92rem; }
-  .ni-brand i    { display: none; }  /* hide icon on mobile to save space */
-
-  /* Search: takes remaining space but has a sensible min */
+  .ni-brand i    { display: none; }
   .ni-search { max-width: none; flex: 1 1 80px; min-width: 60px; }
-
-  /* Tighten padding */
   .ni-wrap { padding: 0 12px; gap: 8px; }
-}
 
-/* ── Very small phones (≤360px) ── */
+  /* Sheet only shows on mobile */
+  .ms-sheet, .ms-backdrop { display: block; }
+}
+@media (min-width: 768px) {
+  .ms-sheet    { display: none !important; }
+  .ms-backdrop { display: none !important; }
+}
 @media (max-width: 360px) {
   .ni-brand span { font-size: .8rem; }
   .ni-search input { font-size: .78rem; padding: .3rem .45rem; }
@@ -388,41 +599,48 @@
 
 <script>
 (function () {
-  var ham    = document.getElementById('niHam');
-  var drawer = document.getElementById('niDrawer');
-  var nav    = document.getElementById('mainNav');
-  if (!ham || !drawer) return;
+  var ham      = document.getElementById('niHam');
+  var sheet    = document.getElementById('msSheet');
+  var backdrop = document.getElementById('msBackdrop');
+  var closeBtn = document.getElementById('msClose');
+  if (!ham || !sheet) return;
 
   function openMenu() {
-    drawer.classList.add('open');
+    sheet.classList.add('open');
+    backdrop.classList.add('show');
     ham.classList.add('open');
     ham.setAttribute('aria-expanded', 'true');
-    drawer.setAttribute('aria-hidden', 'false');
+    sheet.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden'; /* prevent page scroll behind sheet */
   }
+
   function closeMenu() {
-    drawer.classList.remove('open');
+    sheet.classList.remove('open');
+    backdrop.classList.remove('show');
     ham.classList.remove('open');
     ham.setAttribute('aria-expanded', 'false');
-    drawer.setAttribute('aria-hidden', 'true');
+    sheet.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
   }
 
   ham.addEventListener('click', function (e) {
     e.stopPropagation();
-    drawer.classList.contains('open') ? closeMenu() : openMenu();
+    sheet.classList.contains('open') ? closeMenu() : openMenu();
   });
 
-  /* tap outside → close */
-  document.addEventListener('click', function (e) {
-    if (drawer.classList.contains('open') && !nav.contains(e.target)) closeMenu();
-  });
+  /* X button */
+  if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+
+  /* tap backdrop → close */
+  backdrop.addEventListener('click', closeMenu);
 
   /* Escape → close */
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') closeMenu();
   });
 
-  /* tap a drawer link → close after navigation */
-  drawer.querySelectorAll('.ni-drw').forEach(function (link) {
+  /* tap a nav link → close */
+  sheet.querySelectorAll('.ms-link').forEach(function (link) {
     link.addEventListener('click', closeMenu);
   });
 })();
