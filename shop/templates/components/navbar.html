@@ -1,205 +1,265 @@
 {% load nav_extras %}
 
-<nav class="navbar navbar-expand-md sticky-top navbar-dark" style="background:#4c1d95; padding:.6rem 0;">
-  <div class="container-fluid px-3">
+<nav class="navbar navbar-expand-md sticky-top" id="mainNav">
+  <div class="container">
 
-    <!-- Brand -->
-    <a class="navbar-brand fw-bold text-gold" href="{% url 'home' %}" style="font-size:1.1rem;">
-      Rian Audio Sounds
-    </a>
+    <!-- ── Brand ── -->
+    <a class="navbar-brand fw-bold" href="{% url 'home' %}">Rian Audio Sounds</a>
 
-    <!-- Right side of top bar: cart icon + hamburger (mobile only) -->
-    <div class="d-flex d-md-none align-items-center ms-auto" style="gap:8px;">
-      <a href="{% url 'cart_detail' %}" class="nav-cart-icon position-relative" aria-label="Cart">
+    <!-- ── Mobile top-bar: cart icon + toggler ── -->
+    <div class="d-flex d-md-none align-items-center" style="gap:10px; margin-left:auto;">
+
+      <a href="{% url 'cart_detail' %}" class="mobile-cart-btn" aria-label="View cart">
         <i class="bi bi-cart3"></i>
         {% if cart|length > 0 %}
-          <span class="cart-count">{{ cart|length }}</span>
+          <span class="mobile-cart-badge">{{ cart|length }}</span>
         {% endif %}
       </a>
-      <button class="hamburger-btn" type="button"
-              data-bs-toggle="collapse" data-bs-target="#mainNavbar"
-              aria-controls="mainNavbar" aria-expanded="false"
+
+      <button class="nav-toggler" type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navContent"
+              aria-controls="navContent"
+              aria-expanded="false"
               aria-label="Toggle navigation">
-        <span></span>
-        <span></span>
-        <span></span>
+        <i class="bi bi-list"></i>
       </button>
+
     </div>
 
-    <!-- Collapsible content -->
-    <div class="collapse navbar-collapse" id="mainNavbar">
-      <div class="d-md-flex align-items-center w-100 py-2 py-md-0">
+    <!-- ── Collapsible content ── -->
+    <div class="collapse navbar-collapse" id="navContent">
 
-        <!-- Nav links -->
-        <ul class="navbar-nav me-auto mb-2 mb-md-0 fw-semibold">
-          <li class="nav-item">
-            <a class="nav-link {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
-               href="{% url 'home' %}">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
-               href="{% url 'products' %}">Products</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
-               href="{% url 'contact' %}">Contact</a>
-          </li>
-        </ul>
+      <!-- Left: page links -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name|in_list:'home' %}active{% endif %}"
+             href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name|in_list:'products,product_detail,category_products' %}active{% endif %}"
+             href="{% url 'products' %}">Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name|in_list:'contact' %}active{% endif %}"
+             href="{% url 'contact' %}">Contact</a>
+        </li>
+      </ul>
 
-        <!-- Search -->
-        <form class="d-flex my-2 my-md-0 me-md-3" method="get"
-              action="{% url 'search_products' %}" role="search" style="gap:4px;">
-          <input class="form-control form-control-sm" type="search" name="q"
-                 placeholder="Search products…" aria-label="Search"
-                 value="{{ request.GET.q|default:'' }}" style="min-width:0;">
-          <button class="btn btn-shop btn-sm fw-bold px-3" type="submit">
-            <i class="bi bi-search"></i>
-          </button>
-        </form>
+      <!-- Centre: search -->
+      <form class="navbar-search-form d-flex me-md-3 my-2 my-md-0"
+            method="get" action="{% url 'search_products' %}" role="search"
+            style="gap:4px;">
+        <input class="form-control form-control-sm"
+               type="search" name="q"
+               placeholder="Search products…"
+               value="{{ request.GET.q|default:'' }}"
+               aria-label="Search products">
+        <button class="btn btn-shop btn-sm px-3 fw-semibold" type="submit">
+          <i class="bi bi-search"></i>
+        </button>
+      </form>
 
-        <!-- Auth + desktop cart -->
-        <ul class="navbar-nav align-items-md-center mb-0 fw-semibold" style="gap:8px;">
+      <!-- Right: cart (desktop) + auth -->
+      <ul class="navbar-nav align-items-md-center" style="gap:8px;">
 
-          <!-- Cart — desktop dropdown -->
-          <li class="nav-item dropdown d-none d-md-block">
-            <a class="btn btn-cart btn-sm position-relative fw-bold"
-               href="{% url 'cart_detail' %}"
-               id="navbarCart" role="button"
-               data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-cart3 me-1"></i>Cart
-              {% if cart|length > 0 %}
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:.6rem;">
-                  {{ cart|length }}
-                </span>
-              {% endif %}
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end p-3 shadow-lg"
-                id="cart-dropdown" style="min-width:260px;">
-              {% if cart %}
-                {% for item in cart %}
-                  <li class="d-flex justify-content-between align-items-center border-bottom py-2 gap-2">
-                    <span class="text-truncate flex-grow-1">{{ item.product.name }}</span>
-                    <span class="text-nowrap small">×{{ item.quantity }} · KES {{ item.total_price }}</span>
-                  </li>
-                {% endfor %}
-                <li class="d-flex justify-content-between fw-semibold mt-2 pt-1 border-top">
-                  <span>Total:</span>
-                  <span class="text-gold">KES {{ cart.get_total_price }}</span>
+        <!-- Cart — desktop dropdown only -->
+        <li class="nav-item dropdown d-none d-md-flex align-items-center">
+          <a class="btn btn-cart btn-sm fw-semibold position-relative"
+             href="{% url 'cart_detail' %}"
+             id="desktopCart"
+             data-bs-toggle="dropdown"
+             aria-expanded="false">
+            <i class="bi bi-cart3 me-1"></i>Cart
+            {% if cart|length > 0 %}
+              <span class="position-absolute top-0 start-100 translate-middle
+                           badge rounded-pill bg-danger"
+                    style="font-size:.6rem;">{{ cart|length }}</span>
+            {% endif %}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end shadow-lg p-3"
+              id="cartDropdown" style="min-width:270px;">
+            {% if cart %}
+              {% for item in cart %}
+                <li class="d-flex justify-content-between align-items-center
+                            border-bottom py-2 gap-2">
+                  <span class="text-truncate flex-grow-1 small">{{ item.product.name }}</span>
+                  <span class="text-nowrap small opacity-75">
+                    ×{{ item.quantity }} · KES {{ item.total_price }}
+                  </span>
                 </li>
-                <li class="mt-2">
-                  <a href="{% url 'checkout' %}" class="btn btn-cart w-100 btn-sm">Checkout</a>
-                </li>
-              {% else %}
-                <li class="text-center py-2 small">
-                  <i class="bi bi-cart-x fs-5 d-block mb-1"></i>Your cart is empty.
-                </li>
-              {% endif %}
-            </ul>
+              {% endfor %}
+              <li class="d-flex justify-content-between fw-semibold mt-2 pt-2 border-top">
+                <span>Total</span>
+                <span class="text-gold">KES {{ cart.get_total_price }}</span>
+              </li>
+              <li class="mt-2">
+                <a href="{% url 'checkout' %}" class="btn btn-cart btn-sm w-100">
+                  Checkout
+                </a>
+              </li>
+            {% else %}
+              <li class="text-center py-3 opacity-75 small">
+                <i class="bi bi-cart-x d-block fs-4 mb-1"></i>Your cart is empty
+              </li>
+            {% endif %}
+          </ul>
+        </li>
+
+        <!-- Cart — mobile text link inside menu -->
+        <li class="nav-item d-md-none">
+          <a class="nav-link" href="{% url 'cart_detail' %}">
+            <i class="bi bi-cart3 me-1"></i>Cart
+            {% if cart|length > 0 %}
+              <span class="badge bg-danger ms-1">{{ cart|length }}</span>
+            {% endif %}
+          </a>
+        </li>
+
+        <!-- Auth -->
+        {% if user.is_authenticated %}
+          <li class="nav-item d-none d-md-block">
+            <span class="nav-link text-white-50 small pe-0">
+              Hi, {{ user.username }}
+            </span>
           </li>
-
-          <!-- Cart — mobile text link (inside menu) -->
-          <li class="nav-item d-md-none">
-            <a class="nav-link" href="{% url 'cart_detail' %}">
-              <i class="bi bi-cart3 me-1"></i>Cart
-              {% if cart|length > 0 %}
-                <span class="badge bg-danger ms-1">{{ cart|length }}</span>
-              {% endif %}
-            </a>
+          <li class="nav-item">
+            <form action="{% url 'logout' %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm fw-semibold">
+                Logout
+              </button>
+            </form>
           </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="btn btn-success btn-sm fw-semibold"
+               href="{% url 'login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-red btn-sm fw-semibold"
+               href="{% url 'signup' %}">Register</a>
+          </li>
+        {% endif %}
 
-          <!-- Auth -->
-          {% if user.is_authenticated %}
-            <li class="nav-item d-none d-md-block">
-              <span class="nav-link disabled small text-white-50">Hi, {{ user.username }}</span>
-            </li>
-            <li class="nav-item">
-              <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-sm fw-semibold">Logout</button>
-              </form>
-            </li>
-          {% else %}
-            <li class="nav-item">
-              <a class="btn btn-success btn-sm fw-semibold" href="{% url 'login' %}">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="btn btn-red btn-sm fw-semibold" href="{% url 'signup' %}">Register</a>
-            </li>
-          {% endif %}
-        </ul>
-
-      </div>
-    </div>
-
+      </ul>
+    </div><!-- /collapse -->
   </div>
 </nav>
 
 <style>
-/* ── Custom hamburger ── */
-.hamburger-btn {
+/* ════════════════════════════════════
+   Navbar base
+════════════════════════════════════ */
+#mainNav {
+  background: #4c1d95;
+  padding: .6rem 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+
+#mainNav .navbar-brand {
+  color: #f59e0b;
+  font-size: 1.15rem;
+  letter-spacing: -.3px;
+}
+#mainNav .navbar-brand:hover { color: #fff; }
+
+#mainNav .nav-link {
+  color: rgba(255,255,255,.85);
+  font-weight: 500;
+  font-size: .95rem;
+  padding: .4rem .6rem;
+  border-radius: .4rem;
+  transition: color .2s, background .2s;
+}
+#mainNav .nav-link:hover,
+#mainNav .nav-link.active {
+  color: #f59e0b;
+  background: rgba(255,255,255,.07);
+}
+
+/* ════════════════════════════════════
+   Mobile toggler — Bootstrap list icon,
+   clean, no border, no box
+════════════════════════════════════ */
+.nav-toggler {
   background: transparent;
   border: none;
-  padding: 4px;
+  color: #fff;
+  font-size: 1.6rem;
+  line-height: 1;
+  padding: 2px 4px;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: 5px;
-  width: 34px;
-  height: 34px;
 }
-.hamburger-btn span {
-  display: block;
-  height: 2px;
-  width: 22px;
-  background: #fff;
-  border-radius: 2px;
-  transition: all .25s ease;
-}
-.hamburger-btn:focus { outline: none; }
+.nav-toggler:focus { outline: none; box-shadow: none; }
+.nav-toggler:hover { color: #f59e0b; }
 
-/* ── Mobile cart icon ── */
-.nav-cart-icon {
-  color: #f59e0b;
-  font-size: 1.35rem;
-  text-decoration: none;
+/* ════════════════════════════════════
+   Mobile cart icon
+════════════════════════════════════ */
+.mobile-cart-btn {
   position: relative;
+  color: #f59e0b;
+  font-size: 1.4rem;
+  line-height: 1;
+  text-decoration: none;
   display: flex;
   align-items: center;
 }
-.nav-cart-icon:hover { color: #fff; }
-.cart-count {
+.mobile-cart-btn:hover { color: #fff; }
+
+.mobile-cart-badge {
   position: absolute;
-  top: -6px;
-  right: -8px;
+  top: -5px;
+  right: -7px;
   background: #dc2626;
   color: #fff;
   font-size: .55rem;
   font-weight: 700;
   border-radius: 999px;
-  padding: .15em .4em;
-  min-width: 1.3em;
+  padding: .1em .35em;
+  min-width: 1.2em;
   text-align: center;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
-/* ── Desktop cart dropdown ── */
-#cart-dropdown {
-  background: #4c1d95 !important;
+/* ════════════════════════════════════
+   Cart dropdown (desktop)
+════════════════════════════════════ */
+#cartDropdown {
+  background: #3b1572 !important;
   color: #fff !important;
-  border-radius: .75rem;
   border: none;
+  border-radius: .75rem;
 }
-#cart-dropdown .border-bottom { border-color: rgba(255,255,255,.12) !important; }
-#cart-dropdown .border-top    { border-color: rgba(255,255,255,.18) !important; }
-#cart-dropdown .small, #cart-dropdown small { color: #d1d5db !important; }
+#cartDropdown .border-bottom { border-color: rgba(255,255,255,.12) !important; }
+#cartDropdown .border-top    { border-color: rgba(255,255,255,.18) !important; }
+#cartDropdown .opacity-75    { color: #d1d5db !important; }
 
-/* ── Collapsed menu divider on mobile ── */
+/* ════════════════════════════════════
+   Collapsed mobile menu
+════════════════════════════════════ */
 @media (max-width: 767.98px) {
-  #mainNavbar {
-    border-top: 1px solid rgba(255,255,255,.12);
+  #navContent {
+    border-top: 1px solid rgba(255,255,255,.1);
     margin-top: .5rem;
-    padding-top: .25rem;
+    padding: .5rem 0 .75rem;
+  }
+  #navContent .navbar-nav {
+    gap: 2px;
+  }
+  #navContent .nav-link {
+    padding: .5rem .75rem;
+  }
+  /* Search form full width on mobile */
+  .navbar-search-form {
+    flex-direction: row !important;
+  }
+  .navbar-search-form input {
+    flex: 1;
   }
 }
 </style>

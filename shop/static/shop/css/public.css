@@ -70,16 +70,15 @@ a:hover {
   font-weight: 600;
 }
 
-/* Mobile navbar search */
-.navbar .d-flex {
-  flex-direction: column !important;
+/* Mobile navbar search - only target the search form, not all flex elements */
+.navbar-search-form {
   width: 100%;
 }
 
 @media (min-width: 768px) {
-  .navbar .d-flex {
-    flex-direction: row !important;
+  .navbar-search-form {
     width: auto;
+    flex-shrink: 0;
   }
 }
 
