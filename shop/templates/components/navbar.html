@@ -163,8 +163,8 @@
   flex: 1;               /* fills available space */
   min-width: 0;
   max-width: 260px;      /* cap on desktop so it doesn't go huge */
-  background: rgba(255,255,255,.1);
-  border: 1px solid rgba(255,255,255,.2);
+  background: #fff;
+  border: 1px solid rgba(255,255,255,.3);
   border-radius: 7px;
   overflow: hidden;
   transition: border-color .2s;
@@ -176,22 +176,23 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #fff;
+  color: #333;
   font-size: .85rem;
   padding: .38rem .7rem;
 }
-.ni-search input::placeholder { color: rgba(255,255,255,.4); }
+.ni-search input::placeholder { color: #aaa; }
 .ni-search button {
-  background: transparent;
+  background: #f59e0b;
   border: none;
-  border-left: 1px solid rgba(255,255,255,.15);
-  color: #f59e0b;
-  padding: .38rem .6rem;
+  border-left: 1px solid #e5e7eb;
+  color: #fff;
+  padding: .38rem .65rem;
   cursor: pointer;
   font-size: .88rem;
   flex-shrink: 0;
+  transition: background .2s;
 }
-.ni-search button:hover { color: #fff; }
+.ni-search button:hover { background: #d97706; }
 
 /* ===========================================
    DESKTOP AUTH
@@ -239,16 +240,18 @@
   font-size: 1.4rem;
   line-height: 1;
   text-decoration: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   flex-shrink: 0;        /* NEVER squish or hide this */
   transition: color .2s;
+  padding: 4px;          /* gives badge space to sit inside without clipping */
 }
 .ni-cart:hover { color: #fff; }
 .ni-cart-badge {
   position: absolute;
-  top: -6px;
-  right: -8px;
+  top: 0;
+  right: 0;
+  transform: translate(30%, -30%);
   background: #ef4444;
   color: #fff;
   font-size: .52rem;
@@ -259,6 +262,7 @@
   text-align: center;
   line-height: 1.5;
   border: 1.5px solid #4c1d95;
+  pointer-events: none;
 }
 
 /* ===========================================
