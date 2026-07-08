@@ -63,7 +63,7 @@ class SignUpView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        login(self.request, user)
+        login(self.request, user, backend="shop.backends.UsernameOrEmailBackend")
         messages.success(self.request, "Account created successfully 🎉")
         return redirect("home")
 
