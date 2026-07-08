@@ -1,41 +1,39 @@
-<footer class="footer-custom text-light pt-5 pb-3 mt-5">
+<footer class="footer-custom text-light pt-5 pb-0 mt-5">
   <div class="container">
-    <div class="row gy-4 mb-4">
+    <div class="row gy-5 pb-5">
 
-      <!-- Brand + tagline -->
-      <div class="col-12 col-md-4">
+      <!-- ① Brand + tagline + socials -->
+      <div class="col-12 col-md-4 col-lg-4">
         <h4 class="fw-bold text-gold mb-2">
-          <i class="bi bi-speaker-fill me-2"></i>Rian Audio Sounds
+          <i class="bi bi-speaker-fill me-2" style="font-size:.9em;"></i>Rian Audio Sounds
         </h4>
-        <p class="small opacity-75 mb-3">
-          Nairobi's home for premium car audio systems, custom Jua builds, amplifiers and more.
+        <p class="small mb-4" style="opacity:.7; line-height:1.7;">
+          Nairobi's home for premium car audio systems, custom Jua builds,
+          amplifiers and more. Quality gear, expert advice.
         </p>
-        <!-- Social icons -->
-        <div class="d-flex gap-3 flex-wrap">
+        <div class="d-flex gap-3">
           <a href="https://www.facebook.com/profile.php?id=61561903380922"
-             class="social-link" aria-label="Facebook" target="_blank" rel="noopener">
-            <i class="bi bi-facebook fs-5"></i>
+             class="footer-social" aria-label="Facebook" target="_blank" rel="noopener">
+            <i class="bi bi-facebook"></i>
           </a>
-          <a href="#" class="social-link" aria-label="Instagram">
-            <i class="bi bi-instagram fs-5"></i>
+          <a href="#" class="footer-social" aria-label="Instagram">
+            <i class="bi bi-instagram"></i>
           </a>
           <a href="https://www.tiktok.com/@rian.audio.sound"
-             class="social-link" aria-label="TikTok" target="_blank" rel="noopener">
-            <i class="bi bi-tiktok fs-5"></i>
+             class="footer-social" aria-label="TikTok" target="_blank" rel="noopener">
+            <i class="bi bi-tiktok"></i>
           </a>
           <a href="https://wa.me/254768873350"
-             class="social-link" aria-label="WhatsApp" target="_blank" rel="noopener">
-            <i class="bi bi-whatsapp fs-5"></i>
+             class="footer-social" aria-label="WhatsApp" target="_blank" rel="noopener">
+            <i class="bi bi-whatsapp"></i>
           </a>
         </div>
       </div>
 
-      <!-- Quick Links -->
-      <div class="col-6 col-md-2">
-        <h6 class="fw-bold text-gold mb-3 text-uppercase" style="font-size:.75rem;letter-spacing:.06em;">
-          Quick Links
-        </h6>
-        <ul class="list-unstyled mb-0" style="line-height:2;">
+      <!-- ② Quick links -->
+      <div class="col-6 col-md-2 col-lg-2">
+        <h6 class="footer-heading">Quick Links</h6>
+        <ul class="footer-list">
           <li><a href="{% url 'home' %}" class="footer-link">Home</a></li>
           <li><a href="{% url 'products' %}" class="footer-link">Products</a></li>
           <li><a href="{% url 'contact' %}" class="footer-link">Contact</a></li>
@@ -43,67 +41,158 @@
         </ul>
       </div>
 
-      <!-- Account -->
-      <div class="col-6 col-md-2">
-        <h6 class="fw-bold text-gold mb-3 text-uppercase" style="font-size:.75rem;letter-spacing:.06em;">
-          Account
-        </h6>
-        <ul class="list-unstyled mb-0" style="line-height:2;">
-          <li><a href="{% url 'login' %}" class="footer-link">Login</a></li>
-          <li><a href="{% url 'signup' %}" class="footer-link">Register</a></li>
+      <!-- ③ Account -->
+      <div class="col-6 col-md-2 col-lg-2">
+        <h6 class="footer-heading">Account</h6>
+        <ul class="footer-list">
+          <li><a href="{% url 'login' %}"     class="footer-link">Login</a></li>
+          <li><a href="{% url 'signup' %}"    class="footer-link">Register</a></li>
           <li><a href="{% url 'my_orders' %}" class="footer-link">My Orders</a></li>
           <li><a href="{% url 'cart_detail' %}" class="footer-link">My Cart</a></li>
         </ul>
       </div>
 
-      <!-- Contact -->
-      <div class="col-12 col-md-4">
-        <h6 class="fw-bold text-gold mb-3 text-uppercase" style="font-size:.75rem;letter-spacing:.06em;">
-          Get In Touch
-        </h6>
-        <ul class="list-unstyled mb-0" style="line-height:2.2;">
-          <li>
-            <a href="https://wa.me/254768873350" target="_blank" rel="noopener"
-               class="footer-link d-inline-flex align-items-center gap-2">
-              <i class="bi bi-whatsapp text-gold"></i> +254 768 873 350
-            </a>
-          </li>
+      <!-- ④ Newsletter + contact -->
+      <div class="col-12 col-md-4 col-lg-4">
+        <h6 class="footer-heading">Stay Updated</h6>
+        <p class="small mb-3" style="opacity:.65;">
+          New arrivals &amp; exclusive deals straight to your inbox. No spam, unsubscribe anytime.
+        </p>
+
+        <!-- Inline newsletter form -->
+        <form class="footer-newsletter" method="post" action="{% url 'subscribe_newsletter' %}">
+          {% csrf_token %}
+          <input type="email" name="email" placeholder="Your email address" required>
+          <button type="submit">Subscribe</button>
+        </form>
+
+        <!-- Contact info -->
+        <div class="mt-4 d-flex flex-column gap-2">
+          <a href="https://wa.me/254768873350" target="_blank" rel="noopener"
+             class="footer-contact-link">
+            <i class="bi bi-whatsapp text-gold"></i> +254 768 873 350
+          </a>
           {% if site_config.support_email %}
-          <li>
-            <a href="mailto:{{ site_config.support_email }}"
-               class="footer-link d-inline-flex align-items-center gap-2">
-              <i class="bi bi-envelope text-gold"></i> {{ site_config.support_email }}
-            </a>
-          </li>
+          <a href="mailto:{{ site_config.support_email }}" class="footer-contact-link">
+            <i class="bi bi-envelope text-gold"></i> {{ site_config.support_email }}
+          </a>
           {% endif %}
-          <li class="d-flex align-items-center gap-2 opacity-75 small">
+          <span class="footer-contact-link">
             <i class="bi bi-geo-alt text-gold"></i> Nairobi, Kenya
-          </li>
-        </ul>
-        <a href="https://wa.me/254768873350" target="_blank" rel="noopener"
-           class="btn btn-success btn-sm mt-3 fw-semibold">
-          <i class="bi bi-whatsapp me-1"></i> Chat on WhatsApp
-        </a>
+          </span>
+        </div>
       </div>
 
-    </div>
+    </div><!-- /row -->
+  </div><!-- /container -->
 
-    <!-- Bottom bar -->
-    <div class="border-top pt-3 d-flex flex-wrap justify-content-between align-items-center gap-2"
-         style="border-color:rgba(255,255,255,.12)!important;">
-      <p class="mb-0 small opacity-60">
-        &copy; {% now "Y" %} Rian Audio Sounds. All rights reserved.
-      </p>
-      <p class="mb-0 small opacity-60">
-        Built with <i class="bi bi-heart-fill text-gold" style="font-size:.7rem;"></i> in Nairobi
-      </p>
+  <!-- Bottom bar -->
+  <div class="footer-bottom">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <span>&copy; {% now "Y" %} Rian Audio Sounds. All rights reserved.</span>
+      <span>Made with <i class="bi bi-heart-fill text-gold" style="font-size:.65rem;"></i> in Nairobi</span>
     </div>
   </div>
 </footer>
 
 <!-- Floating WhatsApp bubble -->
-<a href="https://wa.me/254768873350"
-   target="_blank" rel="noopener"
+<a href="https://wa.me/254768873350" target="_blank" rel="noopener"
    class="whatsapp-float" aria-label="Chat on WhatsApp">
   <i class="bi bi-whatsapp"></i>
 </a>
+
+<style>
+/* ── Footer layout ── */
+.footer-custom { background: #2d0d6b; }
+
+.footer-heading {
+  color: #f59e0b;
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: .85rem;
+}
+
+.footer-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.footer-list li { margin-bottom: .35rem; }
+
+.footer-link {
+  color: rgba(255,255,255,.65);
+  text-decoration: none;
+  font-size: .88rem;
+  transition: color .18s, padding-left .18s;
+  display: inline-block;
+}
+.footer-link:hover {
+  color: #f59e0b;
+  padding-left: 4px;
+}
+
+/* Social icons */
+.footer-social {
+  color: rgba(255,255,255,.6);
+  font-size: 1.15rem;
+  transition: color .2s, transform .2s;
+  text-decoration: none;
+}
+.footer-social:hover { color: #f59e0b; transform: translateY(-2px); }
+
+/* Newsletter form */
+.footer-newsletter {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.15);
+}
+.footer-newsletter input {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255,255,255,.08);
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: .85rem;
+  padding: .55rem .85rem;
+}
+.footer-newsletter input::placeholder { color: rgba(255,255,255,.4); }
+.footer-newsletter input:focus { background: rgba(255,255,255,.13); }
+.footer-newsletter button {
+  background: #f59e0b;
+  border: none;
+  color: #2d0d6b;
+  font-size: .82rem;
+  font-weight: 700;
+  padding: .55rem 1rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+.footer-newsletter button:hover { background: #d97706; color: #fff; }
+
+/* Contact links */
+.footer-contact-link {
+  color: rgba(255,255,255,.65);
+  text-decoration: none;
+  font-size: .85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color .18s;
+}
+.footer-contact-link:hover { color: #f59e0b; }
+
+/* Bottom bar */
+.footer-bottom {
+  background: rgba(0,0,0,.25);
+  border-top: 1px solid rgba(255,255,255,.08);
+  padding: .85rem 0;
+  font-size: .78rem;
+  color: rgba(255,255,255,.45);
+}
+</style>

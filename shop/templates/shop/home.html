@@ -252,53 +252,51 @@
 
 <!-- ===== TESTIMONIALS ===== -->
 {% if testimonials %}
-<section class="py-5 bg-light">
+<section class="py-5 testi-section">
   <div class="container">
-    <h2 class="h3 fw-bold text-center mb-4">What Customers Say</h2>
+    <div class="text-center mb-5">
+      <h2 class="h3 fw-bold text-purple mb-1">What Customers Say</h2>
+      <p class="text-muted small">Real experiences from real Nairobi clients</p>
+    </div>
     <div class="row g-4 justify-content-center">
       {% for t in testimonials %}
-        <div class="col-12 col-md-6 col-lg-3">
-          <div class="card border-0 shadow-sm h-100 rounded-4 p-4 text-center testimonial-card">
-            <div class="text-warning mb-3" style="font-size:.9rem;">
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="testi-card">
+            <!-- big quote mark decoration -->
+            <span class="testi-quote-icon">&ldquo;</span>
+
+            <!-- Stars -->
+            <div class="testi-stars mb-3">
+              ★★★★★
             </div>
-            {% if t.avatar %}
-              <img src="{{ t.avatar.url }}" alt="{{ t.name }}"
-                   class="rounded-circle mx-auto mb-3 border border-2 shadow-sm"
-                   style="width:64px;height:64px;object-fit:cover;border-color:#4c1d95!important;">
-            {% else %}
-              <div class="rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold fs-5 shadow-sm"
-                   style="width:64px;height:64px;background:#4c1d95;color:#f59e0b;">
-                {{ t.name|first|upper }}
+
+            <!-- Message -->
+            <p class="testi-message mb-4">"{{ t.message|truncatechars:110 }}"</p>
+
+            <!-- Author row -->
+            <div class="d-flex align-items-center gap-3 mt-auto">
+              {% if t.avatar %}
+                <img src="{{ t.avatar.url }}" alt="{{ t.name }}" class="testi-avatar">
+              {% else %}
+                <div class="testi-avatar-fallback">{{ t.name|first|upper }}</div>
+              {% endif %}
+              <div>
+                <p class="testi-name mb-0">{{ t.name }}</p>
+                <p class="mb-0 text-muted" style="font-size:.75rem;">Verified Customer</p>
               </div>
-            {% endif %}
-            <p class="fst-italic text-muted small mb-3">"{{ t.message }}"</p>
-            <h6 class="fw-bold text-purple mb-0">{{ t.name }}</h6>
+            </div>
           </div>
         </div>
       {% endfor %}
     </div>
-    <div class="text-center mt-4">
-      <a href="{% url 'testimonials' %}" class="btn btn-outline-purple">See All Testimonials</a>
+    <div class="text-center mt-5">
+      <a href="{% url 'testimonials' %}" class="btn btn-outline-purple fw-semibold px-4">
+        Read All Reviews <i class="bi bi-arrow-right ms-1"></i>
+      </a>
     </div>
   </div>
 </section>
 {% endif %}
-
-
-<!-- ===== NEWSLETTER ===== -->
-<section class="py-5 text-white text-center"
-  style="background:linear-gradient(135deg,#4c1d95,#7c3aed);">
-  <div class="container">
-    <h2 class="h3 fw-bold text-gold">Stay Updated</h2>
-    <p class="mb-4 opacity-75">No spam. Unsubscribe anytime.</p>
-    <a href="{% url 'newsletter_page' %}" class="btn btn-shop btn-lg px-5 fw-bold shadow-sm">
-      Join Our Newsletter
-    </a>
-  </div>
-</section>
 
 
 {% endblock %}
@@ -312,12 +310,65 @@
 .product-card:hover .product-img-zoom {
   transform: scale(1.06);
 }
-.testimonial-card {
-  transition: transform .25s, box-shadow .25s;
+
+/* ── Testimonials ── */
+.testi-section {
+  background: linear-gradient(160deg, #f8f5ff 0%, #fff 100%);
 }
-.testimonial-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(76,29,149,.12) !important;
+.testi-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 2px 16px rgba(76,29,149,.08);
+  border: 1px solid rgba(76,29,149,.07);
+  transition: transform .25s, box-shadow .25s;
+  height: 100%;
+  position: relative;
+}
+.testi-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 32px rgba(76,29,149,.14);
+}
+.testi-quote-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  color: #f59e0b;
+  opacity: .35;
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+}
+.testi-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4c1d95;
+}
+.testi-avatar-fallback {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #4c1d95;
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.testi-stars { color: #f59e0b; font-size: .8rem; letter-spacing: 1px; }
+.testi-message {
+  font-size: .9rem;
+  color: #555;
+  line-height: 1.65;
+  font-style: italic;
+}
+.testi-name {
+  font-weight: 700;
+  color: #4c1d95;
+  font-size: .9rem;
 }
 </style>
 {% endblock %}
