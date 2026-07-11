@@ -1,3 +1,4 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -79,5 +80,5 @@ urlpatterns = [
     ),
     path("testimonials/", views.testimonials, name="testimonials"),
 
-    path("upload-test/", upload_test, name="upload_test"),
+    path("upload-test/", staff_member_required(upload_test), name="upload_test"),
 ]

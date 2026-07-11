@@ -3,12 +3,33 @@
    Colors: Deep Purple (#4c1d95) + Gold (#f59e0b)
    ======================================= */
 
+:root {
+  --brand-purple: #4c1d95;
+  --brand-purple-light: #7c3aed;
+  --brand-gold: #f59e0b;
+  --brand-gold-dark: #d97706;
+  --brand-bg: #f3f4f6;
+}
+
 /* ===== Base ===== */
+html {
+  scroll-behavior: smooth;
+}
+*:focus-visible {
+  outline: 2px solid #f59e0b;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
 body {
-  background-color: #f3f4f6; /* light gray */
+  background-color: #f3f4f6;
   font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif;
   color: #333;
   line-height: 1.6;
+  animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 a {
@@ -146,6 +167,51 @@ a:hover {
   }
 }
 
+.section-title {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 3px;
+  background: #f59e0b;
+  border-radius: 2px;
+}
+
+/* ===== Hero display-3 heading — scale down on small screens ===== */
+@media (max-width: 575.98px) {
+  .display-3 { font-size: 2rem !important; line-height: 1.2; }
+  .display-4 { font-size: 1.75rem !important; }
+  .display-5 { font-size: 1.5rem !important; }
+}
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .display-3 { font-size: 2.5rem !important; }
+}
+
+/* ===== Product detail info card sticky on desktop ===== */
+@media (min-width: 768px) {
+  .product-info-sticky {
+    position: sticky;
+    top: 80px;
+  }
+}
+
+/* ===== Auth page card — ensure full width on tiny screens ===== */
+@media (max-width: 400px) {
+  .auth-page-wrapper .card {
+    margin: 0 8px;
+  }
+  .auth-page-wrapper .card-body {
+    padding: 1.25rem;
+  }
+}
+
 /* ===== Section Headings ===== */
 section h2 {
   color: #4c1d95;
@@ -237,8 +303,10 @@ section h2 {
   border: none;
   color: #4c1d95;
   font-weight: 600;
+  transition: background-color 0.2s, color 0.2s;
 }
-.btn-shop:hover {
+.btn-shop:hover,
+.btn-shop:focus {
   background-color: #d97706;
   color: #fff;
 }
@@ -283,6 +351,62 @@ form label {
 }
 
 /* ===== Testimonials ===== */
+.testi-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 2px 16px rgba(76,29,149,.08);
+  border: 1px solid rgba(76,29,149,.07);
+  transition: transform .25s, box-shadow .25s;
+  height: 100%;
+  position: relative;
+}
+.testi-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 32px rgba(76,29,149,.14);
+}
+.testi-quote-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  color: #f59e0b;
+  opacity: .35;
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+}
+.testi-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4c1d95;
+}
+.testi-avatar-fallback {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #4c1d95;
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.testi-stars { color: #f59e0b; font-size: .8rem; letter-spacing: 1px; }
+.testi-message {
+  font-size: .9rem;
+  color: #555;
+  line-height: 1.65;
+  font-style: italic;
+}
+.testi-name {
+  font-weight: 700;
+  color: #4c1d95;
+  font-size: .9rem;
+}
+
 .testimonial-item {
   background: #fff;
   border-radius: 1rem;
@@ -353,6 +477,37 @@ form label {
 .social-link:hover {
   color: #f59e0b;
   transform: scale(1.1);
+}
+
+/* ===== Auth Pages ===== */
+.auth-page-wrapper {
+  background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 100%);
+  min-height: calc(100vh - 58px);
+  display: flex;
+  align-items: center;
+}
+.auth-page-wrapper .card {
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+.auth-page-wrapper .card-body {
+  padding: 2rem;
+}
+
+/* ===== Pagination ===== */
+.pagination .page-link {
+  color: #4c1d95;
+  border-color: #e5e7eb;
+}
+.pagination .page-item.active .page-link {
+  background-color: #4c1d95;
+  border-color: #4c1d95;
+  color: #fff;
+}
+.pagination .page-link:hover {
+  background-color: #f0eaff;
+  color: #4c1d95;
+  border-color: #4c1d95;
 }
 
 /* ===== Newsletter Section ===== */
@@ -444,6 +599,7 @@ form label {
 .text-purple {
   color: #4c1d95 !important;
 }
+.bg-purple { background-color: #4c1d95 !important; }
 
 /* ===== Cart Button ===== */
 .btn-cart {

@@ -100,21 +100,23 @@
 
   <!-- ✅ Cart summary with savings -->
   {% if cart %}
-  <div class="mt-4 p-3 bg-light rounded shadow-sm">
-    <div class="d-flex justify-content-between mb-2">
-      <span class="fw-semibold">Subtotal:</span>
-      <span>KES {{ cart.get_total_price }}</span>
-    </div>
-    <div class="d-flex justify-content-between mb-2 text-success">
-      <span class="fw-semibold">You Save:</span>
-      <span>KES {{ total_savings }}</span>
-    </div>
-    <div class="d-flex justify-content-between h5">
-      <strong>Total:</strong>
-      <span class="text-gold fw-bold">KES {{ cart.get_total_price }}</span>
-    </div>
-    <div class="text-end mt-3">
-      <a href="{% url 'checkout' %}" class="btn btn-shop btn-lg fw-semibold">
+  <div class="card border-0 shadow-sm rounded-4 mt-4">
+    <div class="card-body p-4">
+      <h5 class="fw-bold text-purple mb-3">Order Summary</h5>
+      <div class="d-flex justify-content-between mb-2">
+        <span class="fw-semibold">Subtotal:</span>
+        <span>KES {{ cart.get_total_price }}</span>
+      </div>
+      <div class="d-flex justify-content-between mb-2 text-success">
+        <span class="fw-semibold">You Save:</span>
+        <span>KES {{ total_savings }}</span>
+      </div>
+      <hr>
+      <div class="d-flex justify-content-between h5">
+        <strong>Total:</strong>
+        <span class="text-gold fw-bold">KES {{ cart.get_total_price }}</span>
+      </div>
+      <a href="{% url 'checkout' %}" class="btn btn-shop btn-lg fw-semibold w-100 mt-2">
         Proceed to Checkout
       </a>
     </div>
@@ -122,10 +124,4 @@
   {% endif %}
 </div>
 
-<style>
-.btn-shop {
-  background: #6f42c1; color: #fff; border-radius: 8px; transition: 0.3s;
-}
-.btn-shop:hover { background: #FFD700; color: #000; }
-</style>
 {% endblock %}

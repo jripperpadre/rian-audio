@@ -5,16 +5,13 @@
 <div class="container py-5 text-center">
   
   <!-- Success Icon -->
-  <div class="bg-purple bg-opacity-10 d-inline-flex p-4 rounded-circle">
-    <svg xmlns="http://www.w3.org/2000/svg" 
-         width="64" height="64" fill="none" stroke="currentColor" stroke-width="2"
-         class="text-purple" viewBox="0 0 24 24" aria-hidden="true">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-    </svg>
+  <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-4"
+       style="width:100px;height:100px;background:linear-gradient(135deg,#4c1d95,#7c3aed);">
+    <i class="bi bi-check-lg text-white" style="font-size:3rem;"></i>
   </div>
 
   <!-- Success Text -->
-  <div class="mt-4">
+  <div>
     <h1 class="h3 fw-bold text-purple">Thank You for Your Order!</h1>
     {% if order %}
       <p class="text-muted mt-2">

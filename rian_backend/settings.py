@@ -212,19 +212,14 @@ SECURE_CONTENT_SECURITY_POLICY = {
     "default-src": ("'self'",),
     "script-src": (
         "'self'",
-        "cdn.jsdelivr.net",
         "code.jquery.com",
     ),
     "style-src": (
         "'self'",
         "'unsafe-inline'",
-        "cdn.jsdelivr.net",
-        "fonts.googleapis.com",
     ),
     "font-src": (
         "'self'",
-        "fonts.gstatic.com",
-        "cdn.jsdelivr.net",
     ),
     "img-src": (
         "'self'",
@@ -236,7 +231,6 @@ SECURE_CONTENT_SECURITY_POLICY = {
     "connect-src": (
         "'self'",
         "res.cloudinary.com",
-        "fonts.googleapis.com",
     ),
     "frame-ancestors": ("'none'",),
 }

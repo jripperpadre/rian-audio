@@ -162,7 +162,7 @@
 <!-- ===== CATEGORIES ===== -->
 <section class="py-5">
   <div class="container">
-    <h2 class="h3 fw-bold text-center mb-4 text-purple">Shop by Category</h2>
+    <h2 class="h3 fw-bold text-center mb-4 text-purple section-title">Shop by Category</h2>
     <div class="row g-4 justify-content-center">
       {% for category in categories %}
         <div class="col-6 col-md-3">
@@ -201,7 +201,7 @@
 <section class="py-5 bg-light">
   <div class="container">
     <div class="text-center mb-4">
-      <h2 class="h3 fw-bold text-purple mb-1">Why Choose Rian Audio?</h2>
+      <h2 class="h3 fw-bold text-purple mb-1 section-title">Why Choose Rian Audio?</h2>
       <p class="text-muted">We don't just sell sound — we deliver an experience</p>
     </div>
     <div class="row g-3">
@@ -255,7 +255,7 @@
 <section class="py-5 testi-section">
   <div class="container">
     <div class="text-center mb-5">
-      <h2 class="h3 fw-bold text-purple mb-1">What Customers Say</h2>
+      <h2 class="h3 fw-bold text-purple mb-1 section-title">What Customers Say</h2>
       <p class="text-muted small">Real experiences from real Nairobi clients</p>
     </div>
     <div class="row g-4 justify-content-center">
@@ -309,66 +309,6 @@
 }
 .product-card:hover .product-img-zoom {
   transform: scale(1.06);
-}
-
-/* ── Testimonials ── */
-.testi-section {
-  background: linear-gradient(160deg, #f8f5ff 0%, #fff 100%);
-}
-.testi-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 1.75rem 1.5rem;
-  box-shadow: 0 2px 16px rgba(76,29,149,.08);
-  border: 1px solid rgba(76,29,149,.07);
-  transition: transform .25s, box-shadow .25s;
-  height: 100%;
-  position: relative;
-}
-.testi-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 32px rgba(76,29,149,.14);
-}
-.testi-quote-icon {
-  font-size: 2.5rem;
-  line-height: 1;
-  color: #f59e0b;
-  opacity: .35;
-  position: absolute;
-  top: 1rem;
-  right: 1.25rem;
-}
-.testi-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #4c1d95;
-}
-.testi-avatar-fallback {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #4c1d95;
-  color: #f59e0b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-.testi-stars { color: #f59e0b; font-size: .8rem; letter-spacing: 1px; }
-.testi-message {
-  font-size: .9rem;
-  color: #555;
-  line-height: 1.65;
-  font-style: italic;
-}
-.testi-name {
-  font-weight: 700;
-  color: #4c1d95;
-  font-size: .9rem;
 }
 </style>
 {% endblock %}

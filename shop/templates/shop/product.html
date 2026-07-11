@@ -35,10 +35,11 @@
 
     <!-- Product Info -->
     <div class="col-12 col-md-6">
-      <div class="product-card p-4">
+      <div class="product-info-sticky">
+      <div class="product-card p-4" style="border-top: 4px solid #f59e0b; border-radius: 12px;">
         <h1 class="h4 fw-bold mb-2 text-purple">{{ product.name }}</h1>
         <p class="text-muted small mb-2">{{ product.category.name }}</p>
-        <p class="product-price mb-4 text-gold fw-semibold fs-5">
+        <p class="product-price text-gold fw-semibold fs-5">
           KES {{ product.price }}
           {% if product.old_price %}
             <span class="text-muted text-decoration-line-through ms-2">
@@ -47,26 +48,42 @@
           {% endif %}
         </p>
 
+        {% if product.stock > 0 %}
+          <span class="badge bg-success mb-3">In Stock</span>
+        {% else %}
+          <span class="badge bg-danger mb-3">Out of Stock</span>
+        {% endif %}
+
         <p class="mb-4">{{ product.description }}</p>
 
         <!-- ✅ Add to Cart Form -->
-        <form method="post" action="{% url 'add_to_cart' product.id %}" class="d-flex flex-wrap align-items-center gap-3">
+        <form method="post" action="{% url 'add_to_cart' product.id %}">
           {% csrf_token %}
-          <input 
-            id="quantity"
-            name="quantity"
-            type="number"
-            value="1"
-            min="1"
-            class="form-control text-center border-purple fw-semibold w-auto"
-            style="min-width: 90px;">
-          
-          <button type="submit"
-                  class="btn btn-shop px-4 fw-semibold d-flex align-items-center gap-2">
-            <i class="bi bi-cart-plus"></i> Add to Cart
-          </button>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <input 
+              id="quantity"
+              name="quantity"
+              type="number"
+              value="1"
+              min="1"
+              class="form-control text-center border-purple fw-semibold w-auto"
+              style="min-width: 90px;">
+            
+            <button type="submit"
+                    class="btn btn-shop px-4 fw-semibold d-flex align-items-center gap-2">
+              <i class="bi bi-cart-plus"></i> Add to Cart
+            </button>
+
+            <!-- WhatsApp -->
+            <a href="https://wa.me/254768873350?text=Hi, I'm interested in {{ product.name }}"
+               target="_blank" rel="noopener"
+               class="btn btn-success d-flex align-items-center gap-2">
+              <i class="bi bi-whatsapp"></i> Buy via WhatsApp
+            </a>
+          </div>
         </form>
       </div>
+      </div><!-- /product-info-sticky -->
     </div>
   </div>
 
@@ -120,11 +137,7 @@ function setMainImage(thumb) {
 </script>
 
 <style>
-.active-thumb { border: 2px solid #6f42c1; }
-.border-purple { border: 2px solid #6f42c1 !important; }
-.btn-shop {
-  background: #6f42c1; color: #fff; border-radius: 8px; transition: 0.3s;
-}
-.btn-shop:hover { background: #FFD700; color: #000; }
+  .active-thumb { border: 2px solid #4c1d95; }
+  .border-purple { border: 2px solid #4c1d95 !important; }
 </style>
 {% endblock %}

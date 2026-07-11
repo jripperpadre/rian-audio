@@ -15,6 +15,12 @@ db.sqlite3
 /staticfiles/
 *.log
 
+# User-uploaded media files
+/media/
+
+# Playwright MCP tool cache
+.playwright-mcp/
+
 # IDE files
 .vscode/
 .idea/

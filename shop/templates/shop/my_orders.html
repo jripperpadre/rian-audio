@@ -8,7 +8,7 @@
   <h1 class="h3 fw-bold mb-4 text-purple">My Orders</h1>
 
   {% if orders %}
-    <div class="table-responsive bg-white shadow-sm rounded">
+    <div class="table-responsive bg-white shadow-sm rounded d-none d-md-block">
       <table class="table align-middle mb-0">
         <thead class="bg-purple text-white">
           <tr>
@@ -44,6 +44,31 @@
           {% endfor %}
         </tbody>
       </table>
+    </div>
+
+    <!-- Mobile card fallback -->
+    <div class="d-md-none mt-3 vstack gap-3">
+      {% for order in orders %}
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold text-gold">#{{ order.id }}</span>
+            <span class="badge 
+              {% if order.status == 'processing' %}bg-warning text-dark
+              {% elif order.status == 'sent' %}bg-info
+              {% elif order.status == 'done' %}bg-success
+              {% else %}bg-secondary{% endif %}">
+              {{ order.status|title }}
+            </span>
+          </div>
+          <p class="text-muted small mb-1">{{ order.created_at|date:"M d, Y" }}</p>
+          <p class="fw-semibold mb-2">KES {{ order.total }}</p>
+          <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-outline-purple w-100 rounded-3">
+            View Order
+          </a>
+        </div>
+      </div>
+      {% endfor %}
     </div>
   {% else %}
     <div class="bg-white shadow-sm rounded p-4 text-center">
