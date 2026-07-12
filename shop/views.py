@@ -75,8 +75,7 @@ class CustomLoginView(LoginView):
     def get_success_url(self):
         user = self.request.user
         if user.is_staff or user.is_superuser:
-            # Staff/admin → Django admin dashboard (Jazzmin)
-            return reverse_lazy("admin:index")
+            return reverse_lazy("dashboard:home")
         # Normal customer → homepage (you can switch to "my_orders" if preferred)
         return reverse_lazy("home")
 
