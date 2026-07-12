@@ -1,0 +1,161 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+{% block content %}
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-4 col-lg-3">
+    <div class="stat-card">
+      <div class="icon bg-primary bg-opacity-10 text-primary mb-2"><i class="bi bi-box"></i></div>
+      <div class="number">{{ total_products }}</div>
+      <div class="label">Products</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-3">
+    <div class="stat-card">
+      <div class="icon bg-success bg-opacity-10 text-success mb-2"><i class="bi bi-folder"></i></div>
+      <div class="number">{{ total_categories }}</div>
+      <div class="label">Categories</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-3">
+    <div class="stat-card">
+      <div class="icon bg-warning bg-opacity-10 text-warning mb-2"><i class="bi bi-cart"></i></div>
+      <div class="number">{{ total_orders }}</div>
+      <div class="label">Orders</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-3">
+    <div class="stat-card">
+      <div class="icon bg-info bg-opacity-10 text-info mb-2"><i class="bi bi-currency-dollar"></i></div>
+      <div class="number">KES {{ total_revenue|floatformat:0 }}</div>
+      <div class="label">Revenue (sent/done)</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-3">
+    <div class="stat-card">
+      <div class="icon bg-purple bg-opacity-10 text-purple mb-2" style="color:#4c1d95;background:rgba(76,29,149,.1)"><i class="bi bi-people"></i></div>
+      <div class="number">{{ total_users }}</div>
+      <div class="label">Users</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-3">
+    <div class="stat-card">
+      <div class="icon bg-danger bg-opacity-10 text-danger mb-2"><i class="bi bi-envelope"></i></div>
+      <div class="number">{{ total_contacts }}</div>
+      <div class="label">Contact Messages</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-3">
+    <div class="stat-card">
+      <div class="icon bg-secondary bg-opacity-10 text-secondary mb-2"><i class="bi bi-paper-plane"></i></div>
+      <div class="number">{{ total_subscribers }}</div>
+      <div class="label">Newsletter Subs</div>
+    </div>
+  </div>
+  <div class="col-6 col-md-4 col-lg-3">
+    <div class="stat-card">
+      <div class="icon bg-teal bg-opacity-10 text-teal mb-2" style="color:#20c997;background:rgba(32,201,151,.1)"><i class="bi bi-star"></i></div>
+      <div class="number">{{ total_reviews }}</div>
+      <div class="label">Reviews</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="table-card">
+      <div class="card-header">Order Status Breakdown</div>
+      <div class="card-body">
+        <table class="table">
+          <thead><tr><th>Status</th><th>Count</th></tr></thead>
+          <tbody>
+            {% for s in order_status_counts %}
+              <tr>
+                <td><span class="badge bg-{% if s.status == 'new' %}secondary{% elif s.status == 'processing' %}warning{% elif s.status == 'sent' %}primary{% elif s.status == 'done' %}success{% endif %} badge-status">{{ s.status|title }}</span></td>
+                <td><strong>{{ s.c }}</strong></td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="2" class="text-center text-muted">No orders yet</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="table-card">
+      <div class="card-header">
+        Low Stock Products
+        <a href="{% url 'dashboard:product_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead><tr><th>Product</th><th>Stock</th></tr></thead>
+          <tbody>
+            {% for p in low_stock %}
+              <tr>
+                <td><a href="{% url 'dashboard:product_update' p.pk %}">{{ p.name }}</a></td>
+                <td><span class="badge bg-danger">{{ p.stock }}</span></td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="2" class="text-center text-muted">All products well stocked</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-7">
+    <div class="table-card">
+      <div class="card-header">
+        Recent Orders
+        <a href="{% url 'dashboard:order_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead><tr><th>#</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody>
+            {% for order in recent_orders %}
+              <tr>
+                <td><a href="{% url 'dashboard:order_detail' order.pk %}">#{{ order.id }}</a></td>
+                <td>{{ order.user.username|default:"Guest" }}</td>
+                <td>KES {{ order.total|floatformat:0 }}</td>
+                <td><span class="badge bg-{% if order.status == 'new' %}secondary{% elif order.status == 'processing' %}warning{% elif order.status == 'sent' %}primary{% elif order.status == 'done' %}success{% endif %} badge-status">{{ order.get_status_display }}</span></td>
+                <td>{{ order.created_at|date:"d M Y" }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="5" class="text-center text-muted">No orders yet</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <div class="table-card">
+      <div class="card-header">Recent Contact Messages</div>
+      <div class="card-body">
+        <table class="table">
+          <thead><tr><th>Name</th><th>Subject</th><th>Date</th></tr></thead>
+          <tbody>
+            {% for c in recent_contacts %}
+              <tr>
+                <td>{{ c.name }}</td>
+                <td>{{ c.subject|truncatechars:30 }}</td>
+                <td>{{ c.created_at|date:"d M" }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="3" class="text-center text-muted">No messages</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

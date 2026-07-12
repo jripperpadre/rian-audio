@@ -1,0 +1,45 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Reviews{% endblock %}
+{% block page_title %}Reviews{% endblock %}
+{% block content %}
+
+<div class="table-card">
+  <div class="card-header">{{ page_obj.paginator.count }} Reviews</div>
+  <div class="card-body">
+    <table class="table table-hover">
+      <thead><tr><th>Product</th><th>User</th><th>Rating</th><th>Text</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for r in reviews %}
+          <tr>
+            <td><a href="{% url 'dashboard:product_update' r.product.pk %}">{{ r.product.name|truncatechars:40 }}</a></td>
+            <td>{{ r.user.username|default:"Anonymous" }}</td>
+            <td>{% for i in "12345"|make_list %}{% if forloop.counter <= r.rating %}<i class="bi bi-star-fill text-warning"></i>{% else %}<i class="bi bi-star text-muted"></i>{% endif %}{% endfor %}</td>
+            <td>{{ r.text|truncatechars:60 }}</td>
+            <td>{{ r.created_at|date:"d M Y" }}</td>
+            <td>
+              <form method="post" action="{% url 'dashboard:review_delete' r.pk %}" style="display:inline" onsubmit="return confirm('Delete this review?')">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger btn-sm-icon" title="Delete"><i class="bi bi-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6" class="text-center text-muted py-4">No reviews yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if page_obj.has_other_pages %}
+  <nav class="mt-3">
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>{% endif %}
+      {% for num in page_obj.paginator.page_range %}
+        <li class="page-item {% if page_obj.number == num %}active{% endif %}"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+      {% endfor %}
+      {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>{% endif %}
+    </ul>
+  </nav>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "dashboard/base.html" %}
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} Category{% endblock %}
+{% block page_title %}{% if object %}Edit Category{% else %}Add Category{% endif %}{% endblock %}
+{% block content %}
+
+<div class="form-card">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="id_name" class="form-label">Name</label>
+      <input type="text" name="name" id="id_name" class="form-control" value="{{ form.name.value|default:'' }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="id_image" class="form-label">Image</label>
+      <input type="file" name="image" id="id_image" class="form-control">
+      {% if object and object.image %}
+        <div class="mt-2"><img src="{{ object.image.url }}" style="max-height:80px;border-radius:4px;"></div>
+      {% endif %}
+    </div>
+    {% if form.errors %}
+      {% for field, errors in form.errors.items %}
+        {% for error in errors %}<div class="text-danger">{{ error }}</div>{% endfor %}
+      {% endfor %}
+    {% endif %}
+    <div class="d-flex gap-2">
+      <button type="submit" class="btn btn-primary">{% if object %}Update{% else %}Create{% endif %} Category</button>
+      <a href="{% url 'dashboard:category_list' %}" class="btn btn-outline-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

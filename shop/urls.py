@@ -3,6 +3,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import views
+from . import dashboard_views as dash
 from .views import (
     SignUpView, CustomLoginView, CustomLogoutView,
     CustomPasswordResetView, CustomPasswordResetConfirmView, upload_test
@@ -81,4 +82,38 @@ urlpatterns = [
     path("testimonials/", views.testimonials, name="testimonials"),
 
     path("upload-test/", staff_member_required(upload_test), name="upload_test"),
+]
+
+# ──────────────────────────────
+# Dashboard URLs
+# ──────────────────────────────
+dashboard_urls = [
+    path("", dash.DashboardHome.as_view(), name="home"),
+    path("products/", dash.ProductList.as_view(), name="product_list"),
+    path("products/add/", dash.ProductCreate.as_view(), name="product_create"),
+    path("products/<int:pk>/edit/", dash.ProductUpdate.as_view(), name="product_update"),
+    path("products/<int:pk>/delete/", dash.product_delete, name="product_delete"),
+    path("categories/", dash.CategoryList.as_view(), name="category_list"),
+    path("categories/add/", dash.CategoryCreate.as_view(), name="category_create"),
+    path("categories/<int:pk>/edit/", dash.CategoryUpdate.as_view(), name="category_update"),
+    path("categories/<int:pk>/delete/", dash.category_delete, name="category_delete"),
+    path("orders/", dash.OrderList.as_view(), name="order_list"),
+    path("orders/<int:pk>/", dash.OrderDetail.as_view(), name="order_detail"),
+    path("orders/<int:pk>/status/", dash.order_update_status, name="order_update_status"),
+    path("reviews/", dash.ReviewList.as_view(), name="review_list"),
+    path("reviews/<int:pk>/delete/", dash.review_delete, name="review_delete"),
+    path("testimonials/", dash.TestimonialList.as_view(), name="testimonial_list"),
+    path("testimonials/add/", dash.TestimonialCreate.as_view(), name="testimonial_create"),
+    path("testimonials/<int:pk>/edit/", dash.TestimonialUpdate.as_view(), name="testimonial_update"),
+    path("testimonials/<int:pk>/delete/", dash.testimonial_delete, name="testimonial_delete"),
+    path("contacts/", dash.ContactList.as_view(), name="contact_list"),
+    path("contacts/<int:pk>/delete/", dash.contact_delete, name="contact_delete"),
+    path("newsletter/", dash.NewsletterList.as_view(), name="newsletter_list"),
+    path("newsletter/<int:pk>/delete/", dash.newsletter_delete, name="newsletter_delete"),
+    path("site-config/", dash.site_config_edit, name="site_config"),
+    path("users/", dash.UserList.as_view(), name="user_list"),
+]
+
+urlpatterns += [
+    path("dashboard/", include((dashboard_urls, "shop"), namespace="dashboard")),
 ]

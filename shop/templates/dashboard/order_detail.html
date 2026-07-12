@@ -1,0 +1,80 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Order #{{ order.id }}{% endblock %}
+{% block page_title %}Order #{{ order.id }}{% endblock %}
+{% block content %}
+
+<div class="row g-3">
+  <div class="col-md-8">
+    <div class="table-card mb-3">
+      <div class="card-header">Order Items</div>
+      <div class="card-body">
+        <table class="table">
+          <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
+          <tbody>
+            {% for item in order.items.all %}
+              <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.qty }}</td>
+                <td>KES {{ item.price_each|floatformat:0 }}</td>
+                <td>KES {{ item.subtotal|floatformat:0 }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr class="fw-bold"><td colspan="3">Total</td><td>KES {{ order.total|floatformat:0 }}</td></tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="card-header">Update Status</div>
+      <div class="card-body p-3">
+        <form method="post" action="{% url 'dashboard:order_update_status' order.pk %}" class="d-flex gap-2 align-items-center">
+          {% csrf_token %}
+          <select name="status" class="form-select w-auto">
+            {% for k,v in order.STATUS_CHOICES %}
+              <option value="{{ k }}" {% if order.status == k %}selected{% endif %}>{{ v }}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn btn-primary">Update Status</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="table-card mb-3">
+      <div class="card-header">Customer Details</div>
+      <div class="card-body p-3">
+        <p><strong>User:</strong> {{ order.user.username|default:"Guest" }}</p>
+        <p><strong>Email:</strong> {{ order.user.email|default:"-" }}</p>
+        <p><strong>Phone:</strong> {{ order.address.phone|default:"-" }}</p>
+        <p><strong>Name:</strong> {{ order.address.full_name|default:"-" }}</p>
+        <p><strong>Address:</strong> {{ order.address.line1|default:"-" }} {{ order.address.line2|default:"" }}</p>
+        <p><strong>City:</strong> {{ order.address.city|default:"-" }}</p>
+        <p><strong>Notes:</strong> {{ order.address.notes|default:"-" }}</p>
+        <p><strong>Created:</strong> {{ order.created_at|date:"d M Y H:i" }}</p>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="card-header">WhatsApp</div>
+      <div class="card-body p-3">
+        <p><strong>Customer WhatsApp:</strong>
+          {% if order.address.phone %}
+            <a href="https://wa.me/{{ order.address.phone }}" target="_blank" class="btn btn-sm btn-success"><i class="bi bi-whatsapp"></i> Chat</a>
+          {% else %}-{% endif %}
+        </p>
+        <p><strong>Admin WhatsApp:</strong>
+          {% if order.whatsapp_number %}
+            <a href="https://wa.me/{{ order.whatsapp_number }}" target="_blank" class="btn btn-sm btn-success"><i class="bi bi-whatsapp"></i> Chat</a>
+          {% else %}-{% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<a href="{% url 'dashboard:order_list' %}" class="btn btn-outline-secondary mt-3"><i class="bi bi-arrow-left"></i> Back to Orders</a>
+{% endblock %}

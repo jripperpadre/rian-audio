@@ -1,0 +1,253 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Dashboard{% endblock %} - Rian Audio</title>
+  <link href="{% static 'shop/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'shop/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <style>
+    :root {
+      --sidebar-width: 250px;
+      --sidebar-bg: #1e1e2d;
+      --sidebar-hover: #2a2a3d;
+      --sidebar-active: #3a3a5c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      background: #f4f6f9;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .dashboard-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--sidebar-bg);
+      color: #a2a3b7;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 1000;
+      transition: transform 0.3s;
+    }
+    .sidebar-brand {
+      padding: 1rem 1.25rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .sidebar-brand a { color: #fff; text-decoration: none; }
+    .sidebar-nav { padding: .5rem 0; }
+    .sidebar-nav .nav-item { display: block; }
+    .sidebar-nav .nav-link {
+      color: #a2a3b7;
+      padding: .6rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      text-decoration: none;
+      font-size: .875rem;
+      transition: all .15s;
+      border-left: 3px solid transparent;
+    }
+    .sidebar-nav .nav-link:hover {
+      background: var(--sidebar-hover);
+      color: #fff;
+    }
+    .sidebar-nav .nav-link.active {
+      background: var(--sidebar-active);
+      color: #fff;
+      border-left-color: #4c1d95;
+    }
+    .sidebar-nav .nav-link i { font-size: 1.1rem; width: 20px; text-align: center; }
+    .sidebar-nav .section-title {
+      padding: .75rem 1.25rem .25rem;
+      font-size: .65rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #6c6d82;
+    }
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .topbar {
+      background: #fff;
+      padding: .75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 1rem; }
+    .topbar-left h5 { margin: 0; font-weight: 600; }
+    .topbar-right { display: flex; align-items: center; gap: 1rem; }
+    .topbar-right a { color: #555; text-decoration: none; }
+    .topbar-right a:hover { color: #4c1d95; }
+    .page-content { padding: 1.5rem; flex: 1; }
+    .stat-card {
+      background: #fff;
+      border-radius: .5rem;
+      padding: 1.25rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      transition: transform .15s;
+    }
+    .stat-card:hover { transform: translateY(-2px); }
+    .stat-card .icon {
+      width: 48px; height: 48px; border-radius: .5rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
+    .stat-card .number { font-size: 1.75rem; font-weight: 700; line-height: 1.2; }
+    .stat-card .label { color: #6c757d; font-size: .85rem; }
+    .table-card {
+      background: #fff;
+      border-radius: .5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+    .table-card .card-header {
+      background: #fff;
+      border-bottom: 1px solid #e9ecef;
+      padding: 1rem 1.25rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .table-card .card-body { padding: 0; }
+    .table-card table { margin: 0; }
+    .table-card th { border-top: none; color: #6c757d; font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; }
+    .badge-status { font-size: .8rem; padding: .3rem .6rem; }
+    .btn-sm-icon { padding: .25rem .4rem; }
+    .sidebar-toggle { display: none; background: none; border: none; font-size: 1.25rem; color: #333; cursor: pointer; }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.show { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .sidebar-toggle { display: block; }
+      .page-content { padding: 1rem; }
+    }
+    .form-card {
+      background: #fff;
+      border-radius: .5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+      padding: 1.5rem;
+      max-width: 800px;
+    }
+    .table td, .table th { vertical-align: middle; }
+    .product-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: #6c757d; }
+    .empty-state i { font-size: 3rem; margin-bottom: 1rem; display: block; }
+    a { color: #4c1d95; }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+<div class="dashboard-wrapper">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <i class="bi bi-music-note-beamed"></i>
+      <a href="{% url 'dashboard:home' %}">Rian Audio</a>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="section-title">Main</div>
+      <a href="{% url 'dashboard:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+        <i class="bi bi-speedometer2"></i> Dashboard
+      </a>
+
+      <div class="section-title">Shop</div>
+      <a href="{% url 'dashboard:product_list' %}" class="nav-link {% if 'product' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="bi bi-box"></i> Products
+      </a>
+      <a href="{% url 'dashboard:category_list' %}" class="nav-link {% if 'category' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="bi bi-folder"></i> Categories
+      </a>
+      <a href="{% url 'dashboard:order_list' %}" class="nav-link {% if 'order' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="bi bi-cart"></i> Orders
+      </a>
+      <a href="{% url 'dashboard:review_list' %}" class="nav-link {% if 'review' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="bi bi-star"></i> Reviews
+      </a>
+
+      <div class="section-title">Content</div>
+      <a href="{% url 'dashboard:testimonial_list' %}" class="nav-link {% if 'testimonial' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="bi bi-chat-quote"></i> Testimonials
+      </a>
+      <a href="{% url 'dashboard:contact_list' %}" class="nav-link {% if 'contact' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="bi bi-envelope"></i> Contacts
+      </a>
+      <a href="{% url 'dashboard:newsletter_list' %}" class="nav-link {% if 'newsletter' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="bi bi-paper-plane"></i> Subscribers
+      </a>
+
+      <div class="section-title">Settings</div>
+      <a href="{% url 'dashboard:user_list' %}" class="nav-link {% if 'user' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="bi bi-people"></i> Users
+      </a>
+      <a href="{% url 'dashboard:site_config' %}" class="nav-link {% if 'site_config' in request.resolver_match.url_name %}active{% endif %}">
+        <i class="bi bi-gear"></i> Site Config
+      </a>
+    </nav>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('show')">
+          <i class="bi bi-list"></i>
+        </button>
+        <h5>{% block page_title %}Dashboard{% endblock %}</h5>
+      </div>
+      <div class="topbar-right">
+        <a href="/" target="_blank" title="View Store"><i class="bi bi-box-arrow-up-right"></i> Store</a>
+        <a href="{% url 'logout' %}" title="Logout"><i class="bi bi-box-arrow-right"></i> Logout</a>
+      </div>
+    </header>
+
+    {% if messages %}
+      <div class="px-3 pt-3">
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="page-content">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</div>
+
+<script src="{% static 'shop/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+  document.addEventListener('click', function(e) {
+    var sidebar = document.getElementById('sidebar');
+    if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !e.target.closest('.sidebar-toggle')) {
+      sidebar.classList.remove('show');
+    }
+  });
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
