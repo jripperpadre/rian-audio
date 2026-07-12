@@ -1,74 +1,394 @@
-/* ============================
-   🎵 Rian Audio Sounds Admin
-   Custom Jazzmin Styling
-   ============================ */
+/* ═══════════════════════════════════════════════
+   Rian Audio Sounds — Jazzmin Admin Theme
+   Brand: Deep Purple #4c1d95  ·  Gold #f59e0b
+   ═══════════════════════════════════════════════ */
 
-/* Sidebar background */
-.sidebar-dark-primary {
-    background-color: #4c1d95 !important; /* Deep purple */
+:root {
+  --ra-purple:       #4c1d95;
+  --ra-purple-light: #7c3aed;
+  --ra-purple-pale:  #f0eaff;
+  --ra-gold:         #f59e0b;
+  --ra-gold-dark:    #d97706;
+  --ra-bg:           #f3f4f6;
 }
 
-/* Sidebar brand/logo */
-.brand-link {
-    background-color: #3b0a69 !important; /* Darker purple */
-    color: #fbbf24 !important; /* Gold text */
-    font-weight: 600;
+/* ─── Body / Page background ─── */
+body,
+.content-wrapper,
+.main-sidebar ~ .content-wrapper {
+  background-color: var(--ra-bg) !important;
+  font-family: 'Inter', 'Segoe UI', Roboto, Arial, sans-serif !important;
+}
+
+/* ─── Sidebar ─── */
+.main-sidebar,
+.sidebar-dark-primary {
+  background-color: var(--ra-purple) !important;
+}
+.sidebar-dark-primary .sidebar {
+  background: transparent !important;
+}
+
+/* Brand / Logo area */
+.brand-link,
+.brand-link:focus,
+.brand-link:hover {
+  background-color: #3b0a69 !important;
+  color: var(--ra-gold) !important;
+  font-weight: 700 !important;
+  border-bottom: 1px solid rgba(255,255,255,.08) !important;
+}
+.brand-link .brand-text {
+  color: var(--ra-gold) !important;
 }
 .brand-link .brand-image {
-    border-radius: 50%;
-    box-shadow: 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(0,0,0,.3);
 }
 
-/* Active/selected menu link */
-.nav-sidebar .nav-item > .nav-link.active {
-    background-color: #f59e0b !important; /* Gold */
-    color: #fff !important;
-    font-weight: 600;
-    border-radius: 6px;
+/* Nav links default */
+.nav-sidebar .nav-item > .nav-link {
+  color: rgba(255,255,255,.78) !important;
+  border-left: 3px solid transparent !important;
+  transition: background .15s, color .15s, border-color .15s !important;
+  border-radius: 0 !important;
 }
-
-/* Hover menu link */
 .nav-sidebar .nav-item > .nav-link:hover {
-    background-color: #f59e0b33 !important; /* Light gold */
-    color: #fff !important;
-    border-radius: 6px;
+  background-color: rgba(255,255,255,.1) !important;
+  color: var(--ra-gold) !important;
+  border-left-color: rgba(245,158,11,.45) !important;
 }
 
-/* Page background */
-.content-wrapper {
-    background-color: #f3f4f6 !important; /* Light gray */
+/* Active nav link */
+.nav-sidebar .nav-item > .nav-link.active,
+.nav-sidebar .nav-item.menu-open > .nav-link {
+  background-color: var(--ra-gold) !important;
+  color: var(--ra-purple) !important;
+  font-weight: 700 !important;
+  border-left-color: var(--ra-purple) !important;
+  border-radius: 6px !important;
+  margin: 2px 8px !important;
 }
 
-/* Navbar */
-.navbar {
-    background-color: #4c1d95 !important; /* Purple navbar */
-}
-.navbar .nav-link {
-    color: #fbbf24 !important; /* Gold links */
-}
-.navbar .nav-link:hover {
-    color: #fff !important;
+/* Sidebar section headers */
+.nav-sidebar .nav-header {
+  color: rgba(255,255,255,.35) !important;
+  font-size: .63rem !important;
+  letter-spacing: .09em !important;
+  text-transform: uppercase !important;
+  padding: .65rem 1rem .2rem !important;
 }
 
-/* Cards */
+/* Sidebar scrollbar */
+.main-sidebar::-webkit-scrollbar { width: 5px; }
+.main-sidebar::-webkit-scrollbar-thumb {
+  background: var(--ra-purple-light);
+  border-radius: 3px;
+}
+
+/* ─── Top Navbar ─── */
+.main-header.navbar,
+.navbar-white.navbar,
+.main-header {
+  background-color: var(--ra-purple) !important;
+  border-bottom: none !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3) !important;
+}
+.main-header .navbar-nav .nav-link,
+.main-header .nav-link {
+  color: rgba(255,255,255,.85) !important;
+  font-weight: 500;
+}
+.main-header .navbar-nav .nav-link:hover,
+.main-header .nav-link:hover {
+  color: var(--ra-gold) !important;
+}
+/* Breadcrumb inside header */
+.main-header .breadcrumb-item,
+.main-header .breadcrumb-item.active {
+  color: rgba(255,255,255,.7) !important;
+}
+.main-header .breadcrumb-item + .breadcrumb-item::before {
+  color: rgba(255,255,255,.4) !important;
+}
+/* Topbar title */
+.main-header .navbar-brand {
+  color: var(--ra-gold) !important;
+  font-weight: 700;
+}
+
+/* ─── Content header / Page title bar ─── */
+.content-header h1 {
+  color: var(--ra-purple) !important;
+  font-weight: 700 !important;
+}
+.content-header .breadcrumb-item a {
+  color: var(--ra-purple) !important;
+}
+.content-header .breadcrumb-item.active {
+  color: #6b7280 !important;
+}
+
+/* ─── Cards ─── */
 .card {
-    border-radius: 12px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  border: none !important;
+  border-radius: 1rem !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06) !important;
+  overflow: hidden;
 }
+.card-header {
+  background-color: #fff !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  font-weight: 700 !important;
+  color: var(--ra-purple) !important;
+  padding: .85rem 1.25rem !important;
+}
+.card-footer {
+  background-color: #f9fafb !important;
+  border-top: 1px solid #e5e7eb !important;
+}
+/* Small info cards (dashboard) */
+.small-box {
+  border-radius: 1rem !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.07) !important;
+  overflow: hidden;
+}
+.small-box .inner h3,
+.small-box .inner p { color: #fff !important; }
+.small-box .icon { color: rgba(255,255,255,.25) !important; }
 
-/* Table headers */
+/* ─── Tables ─── */
+.table thead th,
 .table th {
-    background-color: #4c1d95 !important;
-    color: #fff !important;
-    font-weight: 600;
+  background-color: var(--ra-purple) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  border-top: none !important;
+  font-size: .8rem !important;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.table td,
+.table th {
+  vertical-align: middle !important;
+  border-color: #e5e7eb !important;
+}
+.table-hover tbody tr:hover {
+  background-color: var(--ra-purple-pale) !important;
 }
 
-/* Buttons */
-.btn-primary {
-    background-color: #4c1d95 !important;
-    border-color: #4c1d95 !important;
+/* ─── Buttons ─── */
+.btn-primary,
+.btn-info {
+  background-color: var(--ra-purple) !important;
+  border-color: var(--ra-purple) !important;
+  color: #fff !important;
 }
-.btn-primary:hover {
-    background-color: #6d28d9 !important;
-    border-color: #6d28d9 !important;
+.btn-primary:hover,
+.btn-info:hover {
+  background-color: var(--ra-purple-light) !important;
+  border-color: var(--ra-purple-light) !important;
+}
+.btn-warning {
+  background-color: var(--ra-gold) !important;
+  border-color: var(--ra-gold) !important;
+  color: var(--ra-purple) !important;
+  font-weight: 600 !important;
+}
+.btn-warning:hover {
+  background-color: var(--ra-gold-dark) !important;
+  border-color: var(--ra-gold-dark) !important;
+  color: #fff !important;
+}
+.btn-success {
+  background-color: #16a34a !important;
+  border-color: #16a34a !important;
+}
+.btn-success:hover {
+  background-color: #15803d !important;
+  border-color: #15803d !important;
+}
+.btn-danger {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+}
+.btn-danger:hover {
+  background-color: #b91c1c !important;
+  border-color: #b91c1c !important;
+}
+
+/* ─── Forms ─── */
+.form-control:focus,
+.form-select:focus,
+select.form-control:focus {
+  border-color: var(--ra-purple) !important;
+  box-shadow: 0 0 0 .2rem rgba(76,29,149,.2) !important;
+}
+.form-control,
+.form-select {
+  border-radius: .5rem !important;
+  border-color: #d1d5db !important;
+}
+label,
+.col-form-label {
+  font-weight: 600 !important;
+  color: var(--ra-purple) !important;
+}
+
+/* ─── Tabs (changeform) ─── */
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+  background-color: var(--ra-purple) !important;
+  border-color: var(--ra-purple) var(--ra-purple) #fff !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+.nav-tabs .nav-link {
+  color: var(--ra-purple) !important;
+}
+.nav-tabs .nav-link:hover {
+  color: var(--ra-gold) !important;
+  border-color: #e5e7eb #e5e7eb #dee2e6 !important;
+}
+
+/* ─── Pagination ─── */
+.pagination .page-link {
+  color: var(--ra-purple) !important;
+  border-color: #e5e7eb !important;
+}
+.pagination .page-item.active .page-link {
+  background-color: var(--ra-purple) !important;
+  border-color: var(--ra-purple) !important;
+  color: #fff !important;
+}
+.pagination .page-link:hover {
+  background-color: var(--ra-purple-pale) !important;
+  color: var(--ra-purple) !important;
+}
+
+/* ─── Alerts ─── */
+.alert-success { background: #d1fae5 !important; color: #065f46 !important; border-color: #34d399 !important; }
+.alert-danger  { background: #fee2e2 !important; color: #991b1b !important; border-color: #f87171 !important; }
+.alert-warning { background: #fef3c7 !important; color: #92400e !important; border-color: #fcd34d !important; }
+.alert-info    { background: #e0f2fe !important; color: #1e40af !important; border-color: #60a5fa !important; }
+
+/* ─── Django Admin top "Django Administration" title ─── */
+#header,
+#branding h1 a:link,
+#branding h1 a:visited {
+  color: var(--ra-gold) !important;
+}
+
+/* ─── Badges ─── */
+.badge-primary,
+.badge.bg-primary { background-color: var(--ra-purple) !important; }
+.badge-warning,
+.badge.bg-warning { background-color: var(--ra-gold) !important; color: var(--ra-purple) !important; }
+
+/* ─── Dropdown menus ─── */
+.dropdown-menu {
+  border-radius: .75rem !important;
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,.12) !important;
+}
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: var(--ra-purple-pale) !important;
+  color: var(--ra-purple) !important;
+}
+.dropdown-item.active,
+.dropdown-item:active {
+  background-color: var(--ra-purple) !important;
+  color: #fff !important;
+}
+
+/* ─── Callout / info boxes ─── */
+.callout-info  { border-left-color: var(--ra-purple) !important; }
+.callout-warning { border-left-color: var(--ra-gold) !important; }
+
+/* ─── Footer ─── */
+.main-footer {
+  background: #fff !important;
+  border-top: 1px solid #e5e7eb !important;
+  color: #6b7280 !important;
+  font-size: .82rem !important;
+}
+
+/* ─── Search bar in topnav ─── */
+.navbar-search-block .form-control:focus {
+  border-color: var(--ra-gold) !important;
+  box-shadow: 0 0 0 .2rem rgba(245,158,11,.25) !important;
+}
+
+/* ─── Sidebar user panel ─── */
+.user-panel .info a {
+  color: var(--ra-gold) !important;
+}
+.user-panel .info a:hover {
+  color: #fff !important;
+}
+
+/* ─── "View on site" button (admin object tools) ─── */
+.object-tools li a {
+  background: var(--ra-gold) !important;
+  color: var(--ra-purple) !important;
+  font-weight: 600;
+  border-radius: .5rem !important;
+  padding: .35rem .85rem !important;
+}
+.object-tools li a:hover {
+  background: var(--ra-gold-dark) !important;
+  color: #fff !important;
+}
+
+/* ─── Action submit buttons ─── */
+input[type="submit"],
+.submit-row input[type="submit"],
+.submit-row a.closelink {
+  border-radius: .5rem !important;
+}
+.submit-row input[type="submit"].default,
+input[name="_save"] {
+  background: var(--ra-purple) !important;
+  color: #fff !important;
+  border-color: var(--ra-purple) !important;
+}
+.submit-row input[type="submit"].default:hover,
+input[name="_save"]:hover {
+  background: var(--ra-purple-light) !important;
+  border-color: var(--ra-purple-light) !important;
+}
+
+/* ─── Storefront link in topbar (Jazzmin topmenu) ─── */
+.navbar-nav .nav-item a[href="/"] {
+  color: var(--ra-gold) !important;
+  font-weight: 600;
+}
+
+/* ─── Mobile responsive fixes ─── */
+@media (max-width: 991.98px) {
+  .main-header { padding: 0 .75rem !important; }
+  .content-wrapper { padding: 0 !important; }
+  .content { padding: .75rem !important; }
+  .content-header { padding: .75rem !important; }
+  .card-body { padding: 1rem !important; }
+  .table thead th { font-size: .75rem !important; padding: .5rem .6rem !important; }
+  .table td, .table th { padding: .5rem .6rem !important; font-size: .85rem !important; }
+}
+
+@media (max-width: 575.98px) {
+  .content { padding: .5rem !important; }
+  .content-header { padding: .5rem !important; }
+  .card { border-radius: .75rem !important; }
+  .small-box { border-radius: .75rem !important; }
+  .btn { font-size: .85rem !important; padding: .4rem .75rem !important; }
+  .table { font-size: .8rem !important; }
+  .table thead th { font-size: .7rem !important; }
+}
+
+/* Focus ring — matches site */
+*:focus-visible {
+  outline: 2px solid var(--ra-gold) !important;
+  outline-offset: 2px !important;
+  border-radius: 4px !important;
 }

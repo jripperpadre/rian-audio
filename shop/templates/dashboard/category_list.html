@@ -9,6 +9,7 @@
     <a href="{% url 'dashboard:category_create' %}" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Add Category</a>
   </div>
   <div class="card-body">
+    <div class="table-responsive">
     <table class="table">
       <thead><tr><th>Name</th><th>Slug</th><th>Products</th><th>Created</th><th>Actions</th></tr></thead>
       <tbody>
@@ -31,6 +32,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>{# /table-responsive #}
   </div>
 </div>
 {% endblock %}

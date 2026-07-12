@@ -67,6 +67,7 @@
     <div class="table-card">
       <div class="card-header">Order Status Breakdown</div>
       <div class="card-body">
+        <div class="table-responsive">
         <table class="table">
           <thead><tr><th>Status</th><th>Count</th></tr></thead>
           <tbody>
@@ -80,6 +81,7 @@
             {% endfor %}
           </tbody>
         </table>
+        </div>{# /table-responsive #}
       </div>
     </div>
   </div>
@@ -90,6 +92,7 @@
         <a href="{% url 'dashboard:product_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
       </div>
       <div class="card-body">
+        <div class="table-responsive">
         <table class="table">
           <thead><tr><th>Product</th><th>Stock</th></tr></thead>
           <tbody>
@@ -103,6 +106,7 @@
             {% endfor %}
           </tbody>
         </table>
+        </div>{# /table-responsive #}
       </div>
     </div>
   </div>
@@ -116,6 +120,7 @@
         <a href="{% url 'dashboard:order_list' %}" class="btn btn-sm btn-outline-primary">View All</a>
       </div>
       <div class="card-body">
+        <div class="table-responsive">
         <table class="table">
           <thead><tr><th>#</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
           <tbody>
@@ -132,6 +137,7 @@
             {% endfor %}
           </tbody>
         </table>
+        </div>{# /table-responsive #}
       </div>
     </div>
   </div>
@@ -139,6 +145,7 @@
     <div class="table-card">
       <div class="card-header">Recent Contact Messages</div>
       <div class="card-body">
+        <div class="table-responsive">
         <table class="table">
           <thead><tr><th>Name</th><th>Subject</th><th>Date</th></tr></thead>
           <tbody>
@@ -153,6 +160,7 @@
             {% endfor %}
           </tbody>
         </table>
+        </div>{# /table-responsive #}
       </div>
     </div>
   </div>

@@ -9,6 +9,7 @@
     <a href="{% url 'dashboard:product_create' %}" class="btn btn-sm btn-success"><i class="bi bi-plus-lg"></i> Add Product</a>
   </div>
   <div class="card-body">
+    <div class="table-responsive">
     <table class="table table-hover">
       <thead>
         <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Featured</th><th>Badge</th><th>Actions</th></tr>
@@ -42,6 +43,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>{# /table-responsive #}
   </div>
 </div>
 

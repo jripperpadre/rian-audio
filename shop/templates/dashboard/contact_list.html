@@ -6,6 +6,7 @@
 <div class="table-card">
   <div class="card-header">{{ page_obj.paginator.count }} Messages</div>
   <div class="card-body">
+    <div class="table-responsive">
     <table class="table table-hover">
       <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Date</th><th>Actions</th></tr></thead>
       <tbody>
@@ -28,6 +29,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>{# /table-responsive #}
   </div>
 </div>
 

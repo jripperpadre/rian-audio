@@ -278,6 +278,7 @@ JAZZMIN_SETTINGS = {
     "custom_css": "shop/css/admin_custom.css",
     "topmenu_links": [
         {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
+        {"name": "🎛 Staff Dashboard", "url": "/dashboard/", "new_window": False},
         {"name": "Storefront", "url": "/", "new_window": True},
         {"model": "auth.User"},
         {"model": "auth.Group"},

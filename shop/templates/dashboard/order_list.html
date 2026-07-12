@@ -8,6 +8,7 @@
     <span>{{ page_obj.paginator.count }} Orders</span>
   </div>
   <div class="card-body">
+    <div class="table-responsive">
     <table class="table table-hover">
       <thead><tr><th>#</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
       <tbody>
@@ -32,6 +33,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>{# /table-responsive #}
   </div>
 </div>
 
