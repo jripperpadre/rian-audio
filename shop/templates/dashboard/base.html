@@ -651,6 +651,160 @@
   });
 })();
 </script>
+
+{% if user.is_staff %}
+<!-- ═══════════════════════════════════════════════
+     IDLE TIMEOUT — staff only
+     Warns at 15 min idle, logs out at 20 min idle
+═══════════════════════════════════════════════ -->
+
+<!-- Warning modal -->
+<div id="idleModal" style="
+  display:none; position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,.6); backdrop-filter:blur(3px);
+  align-items:center; justify-content:center;">
+  <div style="
+    background:#fff; border-radius:1rem; padding:2rem 1.75rem;
+    max-width:420px; width:90%; text-align:center;
+    box-shadow:0 8px 40px rgba(0,0,0,.25); animation:fadeInUp .25s ease;">
+    <div style="font-size:2.5rem; margin-bottom:.75rem;">⏱️</div>
+    <h5 style="color:#4c1d95; font-weight:700; margin:0 0 .5rem;">Session Expiring Soon</h5>
+    <p style="color:#6b7280; font-size:.9rem; margin:0 0 1.25rem;">
+      You've been inactive. You'll be logged out in
+      <strong id="idleCountdown" style="color:#dc2626; font-size:1.05rem;">5:00</strong>.
+    </p>
+    <div style="display:flex; gap:.75rem; justify-content:center;">
+      <button onclick="idleStayLoggedIn()" style="
+        background:#4c1d95; color:#fff; border:none;
+        border-radius:.6rem; padding:.55rem 1.5rem;
+        font-weight:700; font-size:.9rem; cursor:pointer;">
+        Stay Logged In
+      </button>
+      <button onclick="idleLogoutNow()" style="
+        background:#fee2e2; color:#dc2626; border:1px solid #fecaca;
+        border-radius:.6rem; padding:.55rem 1.25rem;
+        font-weight:600; font-size:.9rem; cursor:pointer;">
+        Logout Now
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes fadeInUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+</style>
+
+<script>
+(function () {
+  /* ─── Config ─── */
+  var IDLE_TIMEOUT   = {{ idle_timeout_seconds|default:"1200" }};   /* 20 min */
+  var WARN_AFTER     = {{ idle_warn_seconds|default:"900" }};        /* 15 min */
+  var KEEPALIVE_URL  = "{% url 'session_keepalive' %}";
+  var LOGOUT_URL     = "{% url 'logout' %}";
+  var CSRF_TOKEN     = "{{ csrf_token }}";
+
+  var idleTimer      = null;
+  var warnTimer      = null;
+  var countdownTimer = null;
+  var modal          = document.getElementById('idleModal');
+  var countdownEl    = document.getElementById('idleCountdown');
+  var logoutSeconds  = IDLE_TIMEOUT - WARN_AFTER;   /* seconds shown in modal */
+
+  /* Activity events that reset the idle clock */
+  var ACTIVITY_EVENTS = ['mousemove','keydown','mousedown','touchstart','scroll','click'];
+
+  function fmt(sec) {
+    var m = Math.floor(sec / 60);
+    var s = sec % 60;
+    return m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function showModal() {
+    modal.style.display = 'flex';
+    var remaining = logoutSeconds;
+    countdownEl.textContent = fmt(remaining);
+    clearInterval(countdownTimer);
+    countdownTimer = setInterval(function () {
+      remaining -= 1;
+      if (remaining <= 0) {
+        clearInterval(countdownTimer);
+        idleLogoutNow();
+      } else {
+        countdownEl.textContent = fmt(remaining);
+      }
+    }, 1000);
+  }
+
+  function hideModal() {
+    modal.style.display = 'none';
+    clearInterval(countdownTimer);
+  }
+
+  function resetTimers() {
+    clearTimeout(idleTimer);
+    clearTimeout(warnTimer);
+    hideModal();
+
+    /* Show warning after WARN_AFTER seconds of inactivity */
+    warnTimer = setTimeout(showModal, WARN_AFTER * 1000);
+
+    /* Hard logout after IDLE_TIMEOUT seconds of inactivity */
+    idleTimer = setTimeout(idleLogoutNow, IDLE_TIMEOUT * 1000);
+  }
+
+  /* Keep server session alive (AJAX POST) */
+  function keepAlive() {
+    fetch(KEEPALIVE_URL, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': CSRF_TOKEN, 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+    }).catch(function () {});
+  }
+
+  window.idleStayLoggedIn = function () {
+    keepAlive();
+    resetTimers();
+  };
+
+  window.idleLogoutNow = function () {
+    hideModal();
+    /* POST to logout (CSRF required) */
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = LOGOUT_URL;
+    var csrf = document.createElement('input');
+    csrf.type = 'hidden';
+    csrf.name = 'csrfmiddlewaretoken';
+    csrf.value = CSRF_TOKEN;
+    form.appendChild(csrf);
+    document.body.appendChild(form);
+    form.submit();
+  };
+
+  /* Throttle: only reset timer at most once per 30 seconds during activity */
+  var lastReset = 0;
+  function onActivity() {
+    var now = Date.now();
+    if (now - lastReset > 30000) {
+      lastReset = now;
+      keepAlive();
+      resetTimers();
+    }
+  }
+
+  ACTIVITY_EVENTS.forEach(function (evt) {
+    document.addEventListener(evt, onActivity, { passive: true });
+  });
+
+  /* Start the clock */
+  resetTimers();
+})();
+</script>
+{% endif %}
+
 {% block scripts %}{% endblock %}
 </body>
 </html>

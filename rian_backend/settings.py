@@ -4,7 +4,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
 from django.contrib.messages import constants as messages
-import cloudinary
 
 load_dotenv()
 
@@ -59,6 +58,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    # Custom: enforce 20-minute idle timeout for authenticated users
+    "shop.middleware.IdleTimeoutMiddleware",
 ]
 
 # ------------------------------
@@ -128,9 +130,6 @@ USE_TZ = True
 # ------------------------------
 # Static & Media
 # ------------------------------
-# ------------------------------
-# Static & Media
-# ------------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
@@ -146,6 +145,7 @@ cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
     api_key=os.getenv("CLOUDINARY_API_KEY"),
     api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+    secure=True,  # always return https:// URLs — prevents mixed-content warnings
 )
 
 
@@ -208,32 +208,9 @@ SESSION_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_SAMESITE = 'Lax'
 
 # Content Security Policy
-SECURE_CONTENT_SECURITY_POLICY = {
-    "default-src": ("'self'",),
-    "script-src": (
-        "'self'",
-        "code.jquery.com",
-    ),
-    "style-src": (
-        "'self'",
-        "'unsafe-inline'",
-    ),
-    "font-src": (
-        "'self'",
-    ),
-    "img-src": (
-        "'self'",
-        "data:",
-        "res.cloudinary.com",
-        "https:",
-    ),
-    "media-src": ("'self'",),
-    "connect-src": (
-        "'self'",
-        "res.cloudinary.com",
-    ),
-    "frame-ancestors": ("'none'",),
-}
+# NOTE: CSP is enforced via the meta tag in shop/templates/shop/base.html
+#       (upgrade-insecure-requests). A full header-based CSP requires
+#       django-csp which is not installed. The dict below was unused.
 
 # ------------------------------
 # Default PK type
@@ -336,6 +313,15 @@ CART_SESSION_ID = "cart"
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
+# ------------------------------
+# Session / Idle Timeout
+# ------------------------------
+# Staff-only idle timeout is enforced by shop.middleware.IdleTimeoutMiddleware.
+# Timeout values live in shop/constants.py (SESSION_IDLE_TIMEOUT, SESSION_WARNING_TIME).
+SESSION_COOKIE_AGE = 3600           # 1 hour absolute cookie lifetime
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # keep customers logged in across browser restarts
+SESSION_SAVE_EVERY_REQUEST = True   # sliding window — resets cookie age on every request
 
 
 

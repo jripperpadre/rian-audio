@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, DetailView
 from django.contrib.auth import get_user_model
 
+from .constants import SESSION_IDLE_TIMEOUT, SESSION_WARNING_TIME
 from .models import (
     Product, Category, ProductImage, Review, Order, OrderItem,
     Address, NewsletterSubscription, ContactMessage, Testimonial, SiteConfig
@@ -24,6 +25,13 @@ class DashboardMixin:
         if not self.request.user.is_staff:
             return redirect("login")
         return super().dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        # Expose idle timeout values to all dashboard templates
+        ctx["idle_timeout_seconds"] = SESSION_IDLE_TIMEOUT
+        ctx["idle_warn_seconds"] = SESSION_WARNING_TIME
+        return ctx
 
 
 @method_decorator(staff_member, name="dispatch")
@@ -318,7 +326,11 @@ def site_config_edit(request):
         messages.success(request, "Site configuration updated successfully")
         return redirect("dashboard:site_config")
 
-    return render(request, "dashboard/site_config_form.html", {"config": config})
+    return render(request, "dashboard/site_config_form.html", {
+        "config": config,
+        "idle_timeout_seconds": SESSION_IDLE_TIMEOUT,
+        "idle_warn_seconds": SESSION_WARNING_TIME,
+    })
 
 
 # ──────────────────────────────────────────────

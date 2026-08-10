@@ -97,3 +97,10 @@ API_RATE_LIMIT_USER = '1000/hour'
 CACHE_TIMEOUT_PRODUCTS = 300  # 5 minutes
 CACHE_TIMEOUT_CATEGORIES = 3600  # 1 hour
 CACHE_TIMEOUT_FEATURED = 600  # 10 minutes
+
+# ==========================================
+# SESSION / IDLE TIMEOUT (in seconds)
+# ==========================================
+SESSION_IDLE_TIMEOUT = 20 * 60  # 20 minutes of inactivity → auto-logout
+SESSION_WARNING_TIME = 15 * 60  # Show idle-warning modal after 15 min idle (5 min heads-up)
+SESSION_REFRESH_URL = "/session/keepalive/"  # AJAX endpoint to extend session

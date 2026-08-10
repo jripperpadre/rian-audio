@@ -4,33 +4,28 @@ services:
     env: python
     plan: free
     buildCommand: |
-      pip install -r requirements.txt && \
-      python manage.py collectstatic --noinput && \
+      pip install -r requirements.txt &&
+      python manage.py collectstatic --noinput &&
       python manage.py migrate
     startCommand: |
-      python manage.py migrate && \
-      python create_superuser.py && \
+      python manage.py migrate &&
+      python create_superuser.py &&
       gunicorn rian_backend.wsgi:application --log-file -
     envVars:
       - key: DJANGO_SETTINGS_MODULE
         value: rian_backend.settings
       - key: ALLOWED_HOSTS
         value: rian-audio.onrender.com,127.0.0.1,localhost
-      - key: CLOUDINARY_URL
-        value: cloudinary://565488528531148:6PHI_jZD9OipNipyJWIYVq5Y7aQ@drfu5ongy
-      - key: CORS_ALLOWED_ORIGINS
-        value: https://rian-audio.onrender.com
-      - key: CSRF_TRUSTED_ORIGINS
-        value: https://rian-audio.onrender.com
-      - key: DATABASE_URL
-        value: postgresql://rian_audio_db_sda5_user:V6dUrcReC6LCk0BOMsqQSdSj9JtQqZWS@dpg-d32rk3buibrs73a4gkbg-a/rian_audio_db_sda5
       - key: DEBUG
-        value: False
-      - key: DJANGO_SECRET_KEY
-        value: super-secret-key
-      - key: DJANGO_SUPERUSER_USERNAME
-        value: admin
-      - key: DJANGO_SUPERUSER_EMAIL
-        value: admin@example.com
-      - key: DJANGO_SUPERUSER_PASSWORD
-        value: adminpass123
+        value: "0"
+      # ── Set these in the Render dashboard, NOT here ──
+      # DJANGO_SECRET_KEY
+      # DATABASE_URL
+      # CLOUDINARY_CLOUD_NAME
+      # CLOUDINARY_API_KEY
+      # CLOUDINARY_API_SECRET
+      # CORS_ALLOWED_ORIGINS
+      # CSRF_TRUSTED_ORIGINS
+      # DJANGO_SUPERUSER_USERNAME
+      # DJANGO_SUPERUSER_EMAIL
+      # DJANGO_SUPERUSER_PASSWORD

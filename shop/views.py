@@ -1,7 +1,6 @@
 # Django imports
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -13,6 +12,9 @@ from django.db.models import Q
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.urls import reverse
+import time
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import CreateView
 from django import forms
 
@@ -72,16 +74,60 @@ class CustomLoginView(LoginView):
     authentication_form = CustomAuthenticationForm
     template_name = "accounts/login.html"
 
+    def get(self, request, *args, **kwargs):
+        # Show a message when redirected here after an idle timeout
+        if request.COOKIES.get("session_expired") == "1":
+            from django.contrib import messages as _messages
+            _messages.warning(
+                request,
+                "Your session expired due to inactivity. Please log in again."
+            )
+        return super().get(request, *args, **kwargs)
+
     def get_success_url(self):
         user = self.request.user
         if user.is_staff or user.is_superuser:
             return reverse_lazy("dashboard:home")
-        # Normal customer → homepage (you can switch to "my_orders" if preferred)
+        # Normal customer → homepage
         return reverse_lazy("home")
 
 
 class CustomLogoutView(LogoutView):
     next_page = reverse_lazy("home")
+
+
+@require_POST
+@login_required
+def session_keepalive(request):
+    """
+    AJAX endpoint hit by the idle-timeout JS to extend the session.
+    Only meaningful for staff — regular users don't have an idle timeout.
+    Updates the ``last_activity`` timestamp stored by IdleTimeoutMiddleware.
+    """
+    if not request.user.is_staff:
+        return JsonResponse({"status": "ok", "expires_in": None})
+
+    from .constants import SESSION_IDLE_TIMEOUT
+    now = time.time()
+    request.session["last_activity"] = now
+    return JsonResponse({
+        "status": "ok",
+        "expires_in": SESSION_IDLE_TIMEOUT,
+    })
+
+
+@ensure_csrf_cookie
+def idle_config(request):
+    """
+    Provide idle-timeout configuration as JSON for the client-side script.
+    """
+    from .constants import SESSION_IDLE_TIMEOUT, SESSION_WARNING_TIME, SESSION_REFRESH_URL
+    return JsonResponse({
+        "timeout": SESSION_IDLE_TIMEOUT,
+        "warning_after": SESSION_WARNING_TIME,
+        "keepalive_url": SESSION_REFRESH_URL,
+        "logout_url": reverse("logout"),
+    })
 
 
 class CustomPasswordResetView(PasswordResetView):
